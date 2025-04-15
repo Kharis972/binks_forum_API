@@ -45,7 +45,7 @@ namespace binks_forum_API.Repositories
                 while(true)
                 {
                     tries++;  
-                    generatedId = Guid.NewGuid().ToString("N") + "-mms"; 
+                    generatedId = Guid.NewGuid().ToString("N") + Guid.NewGuid().ToString("N") + "-bf"; 
 
                     try
                     {
