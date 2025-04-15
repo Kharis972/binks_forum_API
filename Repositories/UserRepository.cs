@@ -80,7 +80,8 @@ namespace binks_forum_API.Repositories
                     true,
                     false,
                     null,
-                    newUserRequest.Age
+                    newUserRequest.Age,
+                    false
                 );
 
                 //Cible une possible exception lors de la sauvegarde

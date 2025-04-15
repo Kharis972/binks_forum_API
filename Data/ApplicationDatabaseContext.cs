@@ -134,10 +134,6 @@ namespace binks_forum_API.Data
                     .HasColumnName("modoId")
                     .HasField("_modoId")
                     .IsRequired();
-                modo.Property(m => m.Id)
-                    .HasColumnName("Id")
-                    .HasField("_id")
-                    .IsRequired();
                 modo.HasOne(m => m.User)
                     .WithMany()
                     .HasForeignKey(m => m.Id)

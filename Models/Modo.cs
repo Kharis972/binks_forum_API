@@ -3,7 +3,7 @@ namespace binks_forum_API.Models
     public class Modo : User
     {
         private string _modoId = null!;
-        public User User { get; private set; } = null!;
+        public User User { get; set; } = null!;
 
         private Modo() {}
 
