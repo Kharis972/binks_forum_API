@@ -25,8 +25,10 @@ namespace binks_forum_API.Models
             bool doubleAuth,
             bool passwordReset,
             string profileImage,
+            int age,
+            bool isShadowBan,
             string adminId
-        ) : base(id, firstName, lastName, nickName, xp, rankId, encryptedPassword, country, mail, creationDate, doubleAuth, passwordReset, profileImage)
+        ) : base(id, firstName, lastName, nickName, xp, rankId, encryptedPassword, country, mail, creationDate, doubleAuth, passwordReset, profileImage, age, isShadowBan)
         {
             _adminId = adminId;
         }

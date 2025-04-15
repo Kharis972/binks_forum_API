@@ -3,10 +3,10 @@ using binks_forum_API.Models;
 
 namespace binks_forum_API.Service.Interfaces
 {
-    public interface ITopicMessagesService : IService<Topic, int>
+    public interface ITopicMessagesService : IService<TopicMessages, int>
     {
         Task<TopicMessages> AddNewTopicMessagesAsync(int topicId, string userId, AddNewTopicMessages newTopicMessages);
         Task<TopicMessages> EditTopicMessagesAsync(string userId, int topicId, EditTopicMessages editTopicMessages, int topicMessagesId);
-        Task DeleteTopicAsync(string userId, int topicId, DeleteTopicMessages deleteTopicMessages);
+        Task DeleteTopicMessagesAsync(string userId, int topicId, int topicMessagesId);
     }
 }

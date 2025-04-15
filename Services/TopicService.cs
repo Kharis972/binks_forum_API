@@ -74,11 +74,11 @@ namespace binks_forum_API.Service
             }
         }
 
-        public async Task<Topic> DeleteTopicAsync(string userId, int topicId, DeleteTopic deleteTopic)
+        public async Task<Topic> DeleteTopicAsync(string userId, int topicId)
         {
             try 
             {
-                return await _topicRepository.DeleteTopicAsync(userId, topicId, deleteTopic);
+                return await _topicRepository.DeleteTopicAsync(userId, topicId);
             }
             catch(DatabaseGlobalException)
             {

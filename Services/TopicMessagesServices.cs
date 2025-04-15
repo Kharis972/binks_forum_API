@@ -6,7 +6,7 @@ using binks_forum_API.Service.Interfaces;
 
 namespace binks_forum_API.Service
 {
-    public class TopicMessagesService : Service<TopicMessages, int>, ITopicMessagesService, IService<Topic, int>
+    public class TopicMessagesService : Service<TopicMessages, int>, ITopicMessagesService
     {
         private readonly ITopicMessagesRepository _topicMessagesRepository;
         public TopicMessagesService(ITopicMessagesRepository topicMessagesRepository) : base(topicMessagesRepository)

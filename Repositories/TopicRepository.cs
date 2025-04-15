@@ -140,7 +140,7 @@ namespace binks_forum_API.Repositories
             }
         }
 
-        public async Task<Topic> DeleteTopicAsync(string userId, int topicId, DeleteTopic deleteTopic)
+        public async Task<Topic> DeleteTopicAsync(string userId, int topicId)
         {
             User? user;
             try

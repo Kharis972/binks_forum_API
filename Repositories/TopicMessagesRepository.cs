@@ -142,20 +142,30 @@ namespace binks_forum_API.Repositories
         {
             try
             {
-                var topicMessages = await _dbSet.FindAsync(topicMessagesId);
-                if (topicMessages == null || topicMessages.TopicId != topicId || topicMessages.UserId != userId)
+                TopicMessages? topicMessages = await _dbSet.FindAsync(topicMessagesId);
+                if (topicMessages == null) 
                 {
-                    throw new DeletedTopicMessagesException();
+                    throw new TopicMessagesNotFoundException();
                 }
-
-                _dbSet.Remove(topicMessages);
-                await _context.SaveChangesAsync();
+                else if(topicMessages.TopicId != topicId)
+                {
+                    throw new TopicNotFoundException();
+                }
+                else if(topicMessages.UserId != userId)
+                {
+                    throw new UnauthorizedException();
+                }
+                    try
+                    {
+                        _dbSet.Remove(topicMessages);
+                        await _context.SaveChangesAsync();
+                    }      
+                    catch(DatabaseUpdateException)
+                    {
+                        throw new DatabaseUpdateException();
+                    }       
             }
-            catch (DbUpdateException)
-            {
-                throw new DatabaseUpdateException();
-            }
-            catch (Exception)
+            catch (DatabaseGlobalException)
             {
                 throw new DatabaseGlobalException();
             }

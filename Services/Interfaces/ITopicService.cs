@@ -7,6 +7,6 @@ namespace binks_forum_API.Service.Interfaces
     {
         Task<Topic> AddNewTopicAsync(string userId, NewTopic newTopic);
         Task<Topic> EditTopicAsync(string userId, int topicId, EditTopic editTopic);
-        Task<Topic> DeleteTopicAsync(string userId, int topicId, DeleteTopic deleteTopic);
+        Task<Topic> DeleteTopicAsync(string userId, int topicId);
     }
 }
