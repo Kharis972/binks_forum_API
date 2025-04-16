@@ -88,7 +88,15 @@ namespace binks_forum_API.Repositories
         
         public async Task<Modo> EditModoAsync(string userId, string adminId, EditModo editModo)
         {
-
+            Modo? modo;
+            try
+            {
+                
+            }
+            catch
+            {
+                
+            }
         }
         public async Task DeleteModoAsync(string userId, string adminId)
         {
