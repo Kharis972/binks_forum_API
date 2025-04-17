@@ -14,6 +14,10 @@ namespace binks_forum_API.Data
         public DbSet<Modo> Modos { get; set; }
         public DbSet<Topic> Topics { get; set; }
         public DbSet<TopicMessages> TopicMessages { get; set; }
+        public DbSet<News> News { get; set; }
+        public DbSet<NewsRank> NewsRanks { get; set; }
+        public DbSet<Rank> Ranks { get; set; }
+        public DbSet<NewsTopics> NewsTopics { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -238,6 +242,100 @@ namespace binks_forum_API.Data
                      .HasForeignKey(t => t.TopicId)
                      .HasConstraintName("foreign_topicmessages_topics_id")
                      .IsRequired();
+            });
+
+            modelBuilder.Entity<News> (news =>
+            {
+                news.ToTable("news");
+
+                news.HasKey(n => n.Id)
+                    .HasName("id");
+                news.Property(n => n.Id)
+                    .HasColumnName("id")
+                    .HasField("_id")
+                    .IsRequired();
+                news.Property(n => n.Name)
+                    .HasColumnName("name")
+                    .HasField("_name")
+                    .IsRequired();
+                news.Property(n => n.Description)
+                    .HasColumnName("description")
+                    .HasField("_description")
+                    .IsRequired();
+                news.Property(n => n.Body)
+                    .HasColumnName("body")
+                    .HasField("_id")
+                    .IsRequired();
+                news.Property(n => n.ReleaseDate)
+                    .HasColumnName("releaseDate")
+                    .HasField("_releaseDate")
+                    .IsRequired();           
+            });
+
+            modelBuilder.Entity<NewsRank> (newsRank =>
+            {
+                newsRank.HasKey(nr => nr.Id)
+                        .HasName("id");
+                newsRank.Property(nr => nr.Id)
+                        .HasColumnName("id")
+                        .HasField("_id")
+                        .IsRequired();
+                newsRank.HasOne(nr => nr.News)
+                        .WithMany() // Si vous avez ajouté la collection dans News
+                        .HasForeignKey(nr => nr.NewsId)
+                        .HasConstraintName("foreign_newsranks_news_id")
+                        .IsRequired();
+                newsRank.HasOne(nr => nr.Rank)
+                        .WithMany() // Ou WithMany(r => r.NewsRanks) si Rank a une collection
+                        .HasForeignKey(nr => nr.RankId)
+                        .HasConstraintName("foreign_newsranks_rank_id")
+                        .IsRequired();
+            });
+
+            modelBuilder.Entity<NewsTopics>()
+                        .HasKey(nt => new { nt.NewsId, nt.TopicId }); // Clé primaire composite
+
+            modelBuilder.Entity<NewsTopics>()
+                .HasOne(nt => nt.News)
+                .WithMany()
+                .HasForeignKey(nt => nt.NewsId)
+                .HasConstraintName("foreign_newstopics_news_id")
+                .IsRequired();
+
+            modelBuilder.Entity<NewsTopics>()
+                .HasOne(nt => nt.Topic)
+                .WithMany()
+                .HasForeignKey(nt => nt.TopicId)
+                .HasConstraintName("foreign_newstopics_topics_id")
+                .IsRequired();
+
+             
+            modelBuilder.Entity<Rank>(rank =>
+            {
+                rank.HasKey(r => r.Id) // Définir la clé primaire
+                    .HasName("id");
+                
+                rank.Property(r => r.Name)
+                    .HasMaxLength(100)
+                    .HasColumnName("name")
+                    .HasField("_name") // Définir une contrainte sur la longueur
+                    .IsRequired();
+                rank.Property(r => r.Description)
+                    .HasMaxLength(300)// Définir une contrainte sur la longueur
+                    .HasColumnName("description")
+                    .HasField("_description")
+                    .IsRequired(); 
+                
+                rank.Property(r => r.MinXp)
+                    .HasColumnName("minXp")
+                    .HasField("_minXp")
+                    .IsRequired(); // Définir la propriété comme obligatoire
+
+                rank.Property(r => r.RankIcon)
+                    .HasColumnName("rankIcon")
+                    .HasField("_rankIcon")
+                    .HasMaxLength(200)// Définir une contrainte sur la longueur
+                    .IsRequired();
             });
         }
     }

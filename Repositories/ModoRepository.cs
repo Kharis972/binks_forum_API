@@ -43,7 +43,7 @@ namespace binks_forum_API.Repositories
                                 }
                                 if(tries == 35)
                                 {
-                                    throw new InvalidOperationException();
+                                    throw new DatabaseGlobalException();
                                 }
                             }
 
@@ -76,7 +76,7 @@ namespace binks_forum_API.Repositories
                 }
                 else
                 {
-                    throw new AdminNotFoundException();
+                    throw new ForbiddenException();
                 }
             }
             catch(Exception)
@@ -86,21 +86,51 @@ namespace binks_forum_API.Repositories
         }
             
         
-        public async Task<Modo> EditModoAsync(string userId, string adminId, EditModo editModo)
+        
+        public async Task DeleteModoAsync(string userId, string adminId, string modoId)
         {
-            Modo? modo;
+            Admin? admin;
             try
             {
-                
+                admin = await _context.Admins.FindAsync(adminId);
             }
             catch
             {
-                
+                throw new DatabaseGlobalException();
             }
-        }
-        public async Task DeleteModoAsync(string userId, string adminId)
-        {
+            if(admin != null)
+            {
+                if(admin.Id == userId)
+                {
+                    Modo? modo;
+                    try
+                    {
+                        modo = await _context.Modos.FindAsync(modoId);
+                    }
+                    catch
+                    {
+                        throw new DatabaseGlobalException();
+                    }
 
+                    if(modo != null)
+                    {
+                        _dbSet.Remove(modo);
+                        await _context.SaveChangesAsync();
+                    }
+                    else
+                    {
+                        throw new ModoNotFoundException();
+                    }
+                }
+                else
+                {
+                    throw new ModoNotFoundException();
+                }
+            }
+            else
+            {
+                throw new ForbiddenException();
+            }
         }
     }
 }
