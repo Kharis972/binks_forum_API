@@ -8,25 +8,28 @@ namespace binks_forum_API.Models
         private DateTime _creationDate;
         private DateTime _scheduledDate;
         private DateTime _endingDate;
+        private string _userId =null!;
 
         public Activity() {}
+        public Admin? Admin { get; set; }
+        public Modo? Modo { get; set; }
 
         public Activity
         (
-            int id,
             string name,
             string description,
             DateTime creationDate,
             DateTime scheduledDate,
-            DateTime endingDate
+            DateTime endingDate,
+            string userId
         )
         {
-            _id = id;
             _name = name;
             _description = description;
             _creationDate = creationDate;
             _scheduledDate = scheduledDate;
             _endingDate = endingDate;
+            _userId = userId;
         }
 
         public int Id

@@ -9,44 +9,35 @@ namespace binks_forum_API.Repositories
     {
         public ActivityRepository(ApplicationDataBaseContext context) : base(context) {}
 
-        public async Task<Activity> AddNewActivityAsync(string modoId, string userId, string adminId, NewActivity newActivity)
-        {
-            Activity? activity;
+        public async Task<Activity> AddNewActivityAsync(string userId, NewActivity newActivity, string role)
+        { 
             try
-            {
-                //Vérifie si l'Id admin et l'Id modo sont existant dans la DB
-                Admin? admin = await _context.Admins.FindAsync(adminId);
-                Modo? modo = await _context.Modos.FindAsync(modoId);
-
-                //Si l'
-                if(admin != null && modo != null)
+            {       
+                if(role == "Admin")
                 {
-                    if(admin.Id == userId)
-                    {
-                        Activity newActivityInstance = new Activity()
-                        {
-                            Name = newActivity.Name,
-                            Description = newActivity.Description,
-                            CreationDate = DateTime.Now, // Propriété init
-                            ScheduledDate = newActivity.ScheduledDate,
-                            EndingDate = newActivity.EndingDate
-                        };
-
-                        // 4. Sauvegarde
-                        await _context.Activities.AddAsync(newActivityInstance);
-                        await _context.SaveChangesAsync();
-
-                        return newActivityInstance;
-                    }
-                    else
-                    {
-                        throw new ForbiddenException();
-                    }
+                Admin? admin = await _context.Admins.FindAsync(userId);
+                }
+                else if(role == "Modo")
+                {
+                Modo? modo = await _context.Modos.FindAsync(userId);
                 }
                 else
                 {
-                    throw new ForbiddenException();
-                }
+                    throw new UserNotFoundException();
+                }   
+                    //Création de l'activité
+                    Activity activity = new Activity
+                    (newActivity.Name, newActivity.Description, DateTime.Now, newActivity.ScheduledDate, newActivity.EndingDate, userId);
+                    try
+                    { 
+                        await _dbSet.AddAsync(activity);
+                        await _context.SaveChangesAsync();
+                        return activity;
+                    }
+                    catch (DatabaseUpdateException)
+                    {
+                        throw new DatabaseUpdateException();
+                    }                  
             }
             catch(Exception)
             {

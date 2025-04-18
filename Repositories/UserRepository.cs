@@ -106,8 +106,7 @@ namespace binks_forum_API.Repositories
             // Tente d'aller chercher l'entity dans la db
             try
             {
-                user = await _dbSet
-                .FirstOrDefaultAsync(u => u.Mail == loginRequest.Mail.Trim());
+                user = await _dbSet.FirstOrDefaultAsync(u => u.Mail == loginRequest.Mail.Trim());
             }
             //Si il y a y a une exception, il renverait DatabaseGlobalException
             catch(Exception)
