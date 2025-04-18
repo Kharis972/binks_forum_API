@@ -18,6 +18,7 @@ namespace binks_forum_API.Data
         public DbSet<NewsRank> NewsRanks { get; set; }
         public DbSet<Rank> Ranks { get; set; }
         public DbSet<NewsTopics> NewsTopics { get; set; }
+        public DbSet<Activity> Activities { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -336,6 +337,32 @@ namespace binks_forum_API.Data
                     .HasField("_rankIcon")
                     .HasMaxLength(200)// Définir une contrainte sur la longueur
                     .IsRequired();
+            });
+
+            modelBuilder.Entity<Activity> (activities =>
+            {
+                activities.HasKey(a => a.Id)
+                          .HasName("id");
+                activities.Property(a => a.Name)
+                          .HasColumnName("name")
+                          .HasField("_name")
+                          .IsRequired();
+                activities.Property(a => a.Description)
+                          .HasColumnName("description")
+                          .HasField("_description")
+                          .IsRequired();
+                activities.Property(a => a.CreationDate)
+                          .HasColumnName("creationDate")
+                          .HasField("_creationDate")
+                          .IsRequired();
+                activities.Property(a => a.ScheduledDate)
+                          .HasColumnName("scheduledDate")
+                          .HasField("_scheduledDate")
+                          .IsRequired();
+                activities.Property(a => a.EndingDate)
+                          .HasColumnName("endingDate")
+                          .HasField("_endingDate")
+                          .IsRequired();
             });
         }
     }

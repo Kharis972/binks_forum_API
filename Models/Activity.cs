@@ -1,6 +1,6 @@
 namespace binks_forum_API.Models
 {
-    public class Activities
+    public class Activity
     {
         private int _id;
         private string _name;
@@ -9,15 +9,15 @@ namespace binks_forum_API.Models
         private DateTime _scheduledDate;
         private DateTime _endingDate;
 
-        public Activities() {}
+        public Activity() {}
 
-        public Activities
+        public Activity
         (
             int id,
             string name,
             string description,
             DateTime creationDate,
-            DateTime scheduledate,
+            DateTime scheduledDate,
             DateTime endingDate
         )
         {
@@ -25,7 +25,7 @@ namespace binks_forum_API.Models
             _name = name;
             _description = description;
             _creationDate = creationDate;
-            _scheduledDate = scheduledate;
+            _scheduledDate = scheduledDate;
             _endingDate = endingDate;
         }
 
@@ -49,7 +49,7 @@ namespace binks_forum_API.Models
             get => _creationDate;
             init => _creationDate = value;
         }
-        public DateTime ScheduleDate
+        public DateTime ScheduledDate
         {
             get => _scheduledDate;
             init => _scheduledDate = value;
