@@ -7,6 +7,7 @@ namespace binks_forum_API.Models
         private string _description;
         private int _minXp;
         private string _rankIcon;
+        public string UserId { get; set; } 
 
         public Rank() {}
 

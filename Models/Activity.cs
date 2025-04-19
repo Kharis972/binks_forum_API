@@ -13,6 +13,8 @@ namespace binks_forum_API.Models
         public Activity() {}
         public Admin? Admin { get; set; }
         public Modo? Modo { get; set; }
+        public User? User { get; set; }
+        // public List<Participation>? Participations { get; set; } = new List<Participation>();
 
         public Activity
         (
@@ -55,12 +57,13 @@ namespace binks_forum_API.Models
         public DateTime ScheduledDate
         {
             get => _scheduledDate;
-            init => _scheduledDate = value;
+            set => _scheduledDate = value;
         }
         public DateTime EndingDate
         {
             get => _endingDate;
             set => _endingDate = value;
         }
+        public string UserId { get; set; }
     }
 }

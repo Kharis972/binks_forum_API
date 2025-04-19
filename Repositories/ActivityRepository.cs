@@ -2,6 +2,7 @@ using binks_forum_API.Data;
 using binks_forum_API.DTOs.Activities;
 using binks_forum_API.Helpers.CustomExceptions;
 using binks_forum_API.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace binks_forum_API.Repositories
 {
@@ -40,6 +41,120 @@ namespace binks_forum_API.Repositories
                     }                  
             }
             catch(Exception)
+            {
+                throw new DatabaseGlobalException();
+            }
+        }
+
+        public async Task<Activity> EditActivityAsync(int id, string userId, EditActivity editActivity, string role)
+        {
+            try
+            {
+                // 1. Trouver l'activité
+                Activity? activity = await _dbSet.FindAsync(id);
+                if (activity == null) throw new ActivityNotFoundException();
+
+                // 2. Valider le rôle
+                if (role == "Admin")
+                {
+                    if (await _context.Admins.FindAsync(userId) == null)
+                        throw new UnauthorizedAccessException();
+                }
+                else if (role == "Modo")
+                {
+                    if (await _context.Modos.FindAsync(userId) == null)
+                        throw new UnauthorizedAccessException();
+                }
+                else throw new UserNotFoundException();
+
+                if(activity.Name != editActivity.Name)
+                    {
+                        activity.Name = editActivity.Name;
+                    }
+                    if(activity.Description != editActivity.Description)
+                    {
+                        activity.Description = editActivity.Description;
+                    }
+                    if(activity.ScheduledDate != editActivity.ScheduledDate)
+                    {
+                        activity.ScheduledDate = editActivity.ScheduledDate;
+                    }
+                    if(activity.EndingDate != editActivity.EndingDate)
+                    {
+                        activity.EndingDate = editActivity.EndingDate;
+                    }
+                    if(activity.UserId != userId)
+                    {
+                        activity.UserId = userId;
+                    }
+                // 3. Mettre à jour l'activité
+                activity.Name = editActivity.Name;
+                activity.Description = editActivity.Description;
+                activity.ScheduledDate = editActivity.ScheduledDate;
+                activity.EndingDate = editActivity.EndingDate;
+
+                await _context.SaveChangesAsync();
+                return activity;
+            }
+            catch (DatabaseGlobalException)
+            {
+                throw new DatabaseGlobalException();
+            }
+        }
+
+        public async Task<Activity> DeleteActivityAsync(int id, string userId, string role)
+        {
+            try
+            {
+                // 1. Trouver l'activité
+                Activity? activity = await _dbSet.FindAsync(id);
+                if (activity == null) throw new ActivityNotFoundException();
+
+                // 2. Valider le rôle
+                if (role == "Admin")
+                {
+                    if (await _context.Admins.FindAsync(userId) == null)
+                        throw new UnauthorizedAccessException();
+                }
+                else if (role == "Modo")
+                {
+                    if (await _context.Modos.FindAsync(userId) == null)
+                        throw new UnauthorizedAccessException();
+                }
+                else throw new UserNotFoundException();
+
+                // 3. Supprimer l'activité
+                _dbSet.Remove(activity);
+                await _context.SaveChangesAsync();
+                return activity;
+            }
+            catch (DatabaseGlobalException)
+            {
+                throw new DatabaseGlobalException();
+            }
+        }
+        
+        public async Task<List<Activity>> GetActivitiesByUserIdAsync(string userId)
+        {
+            try
+            {
+                return await _dbSet.Where(a => a.UserId == userId).ToListAsync();
+            }
+            catch (DatabaseGlobalException)
+            {
+                throw new DatabaseGlobalException();
+            }
+        }
+
+        public async Task<Activity> GetActivityByIdAsync(int id)
+        {
+            try
+            {
+                Activity? activity = await _dbSet.FindAsync(id);
+                if (activity == null) throw new ActivityNotFoundException();
+                return activity;
+            }
+            catch (DatabaseGlobalException)
             {
                 throw new DatabaseGlobalException();
             }
