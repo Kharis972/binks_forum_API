@@ -1,26 +1,24 @@
 namespace binks_forum_API.Models
 {
-    public class Rank : User
+    public class Rank 
     {
         private int _id;
         private string _name;
         private string _description;
         private int _minXp;
         private string _rankIcon;
-        public string UserId { get; set; } 
 
-        public Rank() {}
+
+        private Rank() {}
 
         public Rank
         (
-            int id,
             string name,
             string description,
             int minXp,
             string rankIcon
         )
         {
-            _id = id;
             _name = name;
             _description = description;
             _minXp = minXp;

@@ -21,6 +21,7 @@ namespace binks_forum_API.Models
         private bool _isShadowBan;
 
         public List<Topic>? Topics { get; private set; }
+        public Rank? Ranks { get; set; }
 
         //default contructor by FluentAPI
         public User() {}

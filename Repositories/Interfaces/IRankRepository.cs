@@ -1,12 +1,12 @@
+using binks_forum_API.DTOs.Rank;
 using binks_forum_API.Models;
 
 namespace binks_forum_API.Repositories.Interfaces
 {
     public interface IRankRepository : IRepository<Rank, int>
     {
-        Task<List<Rank>> GetRanksByUserIdAsync(string userId);
-        Task<Rank> AddNewRankAsync(Rank rank);
-        Task<Rank> EditRankAsync(Rank rank);
+        Task<Rank> AddNewRankAsync(string userId, NewRank newRank);
+        Task<Rank> EditRankAsync(string userId, EditRank editRank);
         Task DeleteRankAsync(int id);
     }
 }
