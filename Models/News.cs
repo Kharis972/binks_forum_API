@@ -12,14 +12,12 @@ namespace binks_forum_API.Models
 
         public News
         (
-            int id,
             string name,
             string description,
             string body,
             DateTime releaseDate
         )
         {
-            _id = id;
             _name = name;
             _description = description;
             _body = body;

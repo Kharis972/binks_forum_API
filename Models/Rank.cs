@@ -9,7 +9,7 @@ namespace binks_forum_API.Models
         private string _rankIcon;
 
 
-        private Rank() {}
+        public Rank() {}
 
         public Rank
         (

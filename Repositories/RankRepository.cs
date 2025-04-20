@@ -43,7 +43,7 @@ namespace binks_forum_API.Repositories
                         await _context.SaveChangesAsync();
                         return rank;
                     }
-                    catch (DatabaseUpdateException)
+                    catch (DbUpdateException)
                     {
                         throw new DatabaseUpdateException();
                     }
@@ -58,69 +58,91 @@ namespace binks_forum_API.Repositories
                 throw new DatabaseGlobalException();
             }
         }
-        public async Task<Rank> EditRankAsync(string userId, EditRank editRank)
+        public async Task<Rank> EditRankAsync(string userId, EditRank editRank, int rankId)
         {
             Rank? rank;
             try
             {
                 try
                 {
-                    rank = await _dbSet.FindAsync(editRank); // Find the rank by its ID
-                    if (rank == null)
+                    Admin? admin = await _context.Admins.FindAsync(userId);
+                    if(admin == null)
                     {
-                        throw new RankNotFoundException();
+                        throw new ForbiddenException();
                     }
+                    else
+                    {
+                        rank = await _dbSet.FindAsync(rankId); // Find the rank by its ID
+                        if (rank == null)
+                        {
+                            throw new RankNotFoundException();
+                        }
+                    }    
                 }
                 catch
                 {
                     throw new DatabaseGlobalException();
                 }
-                // Update the properties of the rank
-                if (editRank.Name != editRank.Name)
+                if
+                (
+                    editRank.Name != editRank.Name && 
+                    editRank.Description != editRank.Description &&
+                    editRank.MinXp != editRank.MinXp &&
+                    editRank.RankIcon != editRank.RankIcon
+                )
                 {
-                    editRank.Name = editRank.Name.Trim();
+                    // Update the properties of the rank
+                    if (editRank.Name != editRank.Name)
+                    {
+                        editRank.Name = editRank.Name.Trim();
+                    }
+                    if (editRank.Description != editRank.Description)
+                    {
+                        editRank.Description = editRank.Description.Trim();
+                    }
+                    if (editRank.MinXp != editRank.MinXp)
+                    {
+                        editRank.MinXp = editRank.MinXp;
+                    }
+                    if (editRank.RankIcon != editRank.RankIcon)
+                    {
+                        editRank.RankIcon = editRank.RankIcon.Trim();
+                    }
+                    if (await _dbSet.FirstOrDefaultAsync(r => r.RankIcon == editRank.RankIcon || r.MinXp == editRank.MinXp) != null)
+                    {
+                        throw new RankAlreadyExistsException();
+                    }
+                    try
+                    {
+                        _dbSet.Update(rank);
+                        await _context.SaveChangesAsync();
+                        return rank;
+                    }
+                    catch(Exception)
+                    {
+                        throw new DatabaseUpdateException();
+                    }
                 }
-                if (editRank.Description != editRank.Description)
+                else
                 {
-                    editRank.Description = editRank.Description.Trim();
+                    throw new NoChangesException();
                 }
-                if (editRank.MinXp != editRank.MinXp)
-                {
-                    editRank.MinXp = editRank.MinXp;
-                }
-                if (editRank.RankIcon != editRank.RankIcon)
-                {
-                    editRank.RankIcon = editRank.RankIcon.Trim();
-                }
-                if (await _dbSet.FirstOrDefaultAsync(r => r.RankIcon == editRank.RankIcon || r.MinXp == editRank.MinXp) != null)
-                {
-                    throw new RankAlreadyExistsException();
-                }
-
-                editRank.Name = editRank.Name.Trim(); // Trim whitespace from the name
-                rank.Name = editRank.Name.Trim();
-                rank.Description = editRank.Description.Trim();
-                rank.MinXp = editRank.MinXp;
-                rank.RankIcon = editRank.RankIcon.Trim();
-
-                _dbSet.Update(rank);
-                await _context.SaveChangesAsync();
-                return rank;
-            }
-            catch (DbUpdateException)
-            {
-                throw new DatabaseUpdateException();
             }
             catch (Exception)
             {
                 throw new DatabaseGlobalException();
             }
         }
-        public async Task DeleteRankAsync(int id)
+        public async Task DeleteRankAsync(int rankId, string role, string userId)
         {
             try
             {
-                Rank? rank = await _dbSet.FindAsync(id);
+               
+                    Admin? admin = await _context.Admins.FindAsync(userId);
+                    if(admin == null) throw new ForbiddenException();
+                
+
+                Rank? rank = await _dbSet.FindAsync(rankId);
                 if (rank != null)
                 {
                     _dbSet.Remove(rank);
@@ -131,7 +153,7 @@ namespace binks_forum_API.Repositories
                     throw new RankNotFoundException();
                 }
             }
-            catch (DbUpdateException)
+            catch (DatabaseUpdateException)
             {
                 throw new DatabaseUpdateException();
             }

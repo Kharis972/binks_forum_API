@@ -2,33 +2,43 @@
 
 namespace binks_forum_API.Models
 {
-    public class NewsRank : News
+    public class NewsRank : Rank
     {
-        private int _id;
+        private int _newsRankId;
+        private int _newsId;  // Clé étrangère
 
-        
-        // Relation avec News
-        public int NewsId { get; set; }  // Clé étrangère
+
         public News News { get; set; }   // Propriété de navigation
 
         // Relation avec Rank
         public int RankId { get; set; }  // Clé étrangère
         public Rank Rank { get; set; }   // Propriété de navigation
 
-        public NewsRank() {}
+        private NewsRank() {}
 
         public NewsRank
         (
-            int id
-        )
+            string name,
+            string description,
+            int minXp,
+            string rankIcon,
+            int newsRankId,
+            int newsId
+        ) : base( name, description, minXp, rankIcon)
         {
-            _id = id;
+            _newsRankId = newsRankId;
+            _newsId = newsId;
         }
 
-        public int Id
+        public int NewsRankId
         {
-            get => _id;
-            set => _id = value;
+            get => _newsRankId;
+            set => _newsRankId = value;
+        }
+        public int NewsId
+        {
+            get => _newsId;
+            set => _newsId = value;
         }
     }
 }

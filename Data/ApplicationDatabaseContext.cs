@@ -293,22 +293,31 @@ namespace binks_forum_API.Data
                         .IsRequired();
             });
 
-            modelBuilder.Entity<NewsTopics>()
-                        .HasKey(nt => new { nt.NewsId, nt.TopicId }); // Clé primaire composite
+            
 
-            modelBuilder.Entity<NewsTopics>()
-                .HasOne(nt => nt.News)
-                .WithMany()
-                .HasForeignKey(nt => nt.NewsId)
-                .HasConstraintName("foreign_newstopics_news_id")
-                .IsRequired();
+            modelBuilder.Entity<NewsTopics>(newsTopics =>
+            {
+                newsTopics.Property(nt => nt.TopicId)
+                          .HasColumnName("topicId")
+                          .HasField("_topicId")
+                          .IsRequired();
+                newsTopics.Property(nt => nt.NewsId)
+                          .HasColumnName("newsId")
+                          .HasField("_newsId")
+                          .IsRequired();
 
-            modelBuilder.Entity<NewsTopics>()
-                .HasOne(nt => nt.Topic)
-                .WithMany()
-                .HasForeignKey(nt => nt.TopicId)
-                .HasConstraintName("foreign_newstopics_topics_id")
-                .IsRequired();
+                newsTopics.HasOne(nt => nt.News)
+                    .WithMany()
+                    .HasForeignKey(nt => nt.NewsId)
+                    .HasConstraintName("foreign_newstopics_news_id")
+                    .IsRequired(); 
+                newsTopics.HasOne(nt => nt.Topic)
+                    .WithMany(t => t.NewsTopics)
+                    .HasForeignKey(nt => nt.TopicId)
+                    .HasConstraintName("foreign_newstopics_topics_id")
+                    .IsRequired();
+            });
+                
 
              
             modelBuilder.Entity<Rank>(rank =>

@@ -13,10 +13,11 @@ namespace binks_forum_API.Models
         private int _participants;
         private string? _topicIcon;
         private DateTime _creationDate;
+        public List<NewsTopics>? NewsTopics { get; set; }
 
         public User User { get; private set; } = null!;
 
-        public List<TopicMessages>? TopicMessages {get; set; }
+        public List<TopicMessages>? TopicMessages { get; set; }
 
         //default contructor by FluentAPI
         public Topic() {}
