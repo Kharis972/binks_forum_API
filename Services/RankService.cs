@@ -65,11 +65,11 @@ namespace binks_forum_API.Services
             }
         }
 
-        public async Task DeleteRankAsync(int rankId)
+        public async Task DeleteRankAsync(int rankId, string userId)
         {
             try
             {
-                await _rankRepository.DeleteRankAsync(rankId);
+                await _rankRepository.DeleteRankAsync(rankId, userId);
             }
             catch(RankNotFoundException)
             {

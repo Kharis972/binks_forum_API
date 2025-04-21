@@ -19,7 +19,7 @@ namespace binks_forum_API.Services
         {
             try
             {
-                return await _newsRankRepository.AddNewsRankAsync(addNewsRank,rankId, userId, newsId);
+                return await _newsRankRepository.AddNewsRankAsync(addNewsRank, rankId, userId, newsId);
             }
             catch(ForbiddenException)
             {
@@ -43,11 +43,11 @@ namespace binks_forum_API.Services
             }
         }
         
-        public async Task DeleteNewsRankAsync(int newsRankId)
+        public async Task DeleteNewsRankAsync(int newsRankId, string userId)
         {
             try
             {
-                await _newsRankRepository.DeleteNewsRankAsync(newsRankId);
+                await _newsRankRepository.DeleteNewsRankAsync(newsRankId, userId);
             }
             catch(RankNotFoundException)
             {

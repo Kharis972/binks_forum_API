@@ -67,7 +67,7 @@ namespace binks_forum_API.Repositories
             }
         }
         
-        public async Task DeleteNewsRankAsync(int newsRankId, string role, string userId)
+        public async Task DeleteNewsRankAsync(int newsRankId, string userId)
         {
             try
             {

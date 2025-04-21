@@ -7,6 +7,6 @@ namespace binks_forum_API.Repositories.Interfaces
     {
         Task<Rank> AddNewRankAsync(string userId, NewRank newRank);
         Task<Rank> EditRankAsync(string userId, EditRank editRank, int rankId);
-        Task DeleteRankAsync(int rankId, string role, string userId);
+        Task DeleteRankAsync(int rankId, string userId);
     }
 }

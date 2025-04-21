@@ -133,7 +133,7 @@ namespace binks_forum_API.Repositories
                 throw new DatabaseGlobalException();
             }
         }
-        public async Task DeleteRankAsync(int rankId, string role, string userId)
+        public async Task DeleteRankAsync(int rankId, string userId)
         {
             try
             {
