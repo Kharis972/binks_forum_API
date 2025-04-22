@@ -3,30 +3,33 @@ namespace binks_forum_API.Models
     public class NewsTopics : News
     {
         // Relation avec News
-        public int NewsId { get; set; }
         public News News { get; set; }
         // Relation avec Topic
-        public int TopicId { get; set; }
         public Topic Topic { get; set; }
 
-        private int _id;
+        private int _newsTopicId;
+        private int _newsId;
+        private int _topicId;
 
         private NewsTopics() {}
 
         public NewsTopics
         (
-            int id
+            int newsId,
+            int topicId
         )
         {
-            _id = id;
+            _newsId = newsId;
+            _topicId = topicId;
         }
 
-        public int Id
+        public int NewsTopicId
         {
-            get => _id;
-            set => _id = value;
+            get => _newsTopicId;
+            set => _newsTopicId = value;
         }
-
-        
+        public int NewsId => _newsId;
+    
+        public int TopicId => _topicId;
     }
 }

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Binks_Forum_API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e688a39f9cc4defed8a05c8e4f13b9e2e96dea88")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+101025de2a4831414f493faa752826c6d9ac91c7")]
 [assembly: System.Reflection.AssemblyProductAttribute("Binks_Forum_API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Binks_Forum_API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
