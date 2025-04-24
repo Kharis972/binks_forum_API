@@ -57,7 +57,7 @@ namespace binks_forum_API.Repositories
                 await _context.SaveChangesAsync();
             }
         }
-        public async Task<AnswerInMessage> EditAnswerInMessageAsync(int id, string userId, NewAnswerInMessage newAnswerInMessage)
+        public async Task<AnswerInMessage> EditAnswerInMessageAsync(int id, string userId, EditAnswerInMessage editAnswerInMessage)
         {
             User? user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
             if(user == null) throw new UserNotFoundException();
@@ -65,8 +65,8 @@ namespace binks_forum_API.Repositories
             AnswerInMessage? answerInMessage = await _context.AnswersInMessages.FindAsync(id);
             if(answerInMessage == null) throw new AnswerInMessageNotFoundException();
 
-            answerInMessage.AnswerId = newAnswerInMessage.AnswerId;
-            answerInMessage.AnsweredMessageId = newAnswerInMessage.AnsweredMessageId;
+            answerInMessage.AnswerId = editAnswerInMessage.AnswerId;
+            answerInMessage.AnsweredMessageId = editAnswerInMessage.AnsweredMessageId;
 
             await _context.SaveChangesAsync();
             return answerInMessage;
