@@ -1,17 +1,24 @@
 using binks_forum_API.DTOs.NewsTopics;
 using binks_forum_API.Helpers.CustomExceptions;
 using binks_forum_API.Models;
+using binks_forum_API.Repositories.Interfaces;
 using binks_forum_API.Service;
 
 namespace binks_forum_API.Services
 {
-    public class NewsTopicServices : Service<NewsTopics, int>
+    public class NewsTopicService : Service<NewsTopics, int>
     {
-        public async Task<NewsTopics> AddNewTopicAsync(AddNewsTopic addNewsTopic, string userId, string role)
+        private readonly INewsTopicRepository _newsTopicRepository;
+
+        public NewsTopicService(INewsTopicRepository newsTopicRepository) : base(newsTopicRepository)
+        {
+            _newsTopicRepository = newsTopicRepository;
+        }
+        public async Task<NewsTopics> AddNewNewsTopicAsync(string userId, string role, int newsId, int topicId)
         {
             try
             {
-                return await _newsTopicRepository.AddNewsTopicAsync(addNewsTopic, userId, role);
+                return await _newsTopicRepository.AddNewNewsTopicAsync(userId, role, newsId, topicId);
             }
             catch(ForbiddenException)
             {
@@ -31,43 +38,11 @@ namespace binks_forum_API.Services
             }
         }
 
-        public async Task<News> EditNewsTopicAsync(EditNewsTopic editNewsTopic, string userId, string role, int newsId)
+        public async Task DeleteNewsTopicAsync(int newsTopicId, string role, string userId)
         {
             try
             {
-                return await _newsTopicRepository.EditNewsTopicAsync(editNewsTopic, userId, role, newsId);
-            }
-            catch(ForbiddenException)
-            {
-                throw new ForbiddenException();
-            }
-            catch(NewsNotFoundException)
-            {
-                throw new NewsNotFoundException();
-            }
-            catch(NewsAlreadyExistsException)
-            {
-                throw new NewsAlreadyExistsException();
-            }
-            catch(DatabaseUpdateException)
-            {
-                throw new DatabaseUpdateException();
-            }
-            catch(NoChangesException)
-            {
-                throw new NoChangesException();
-            }
-            catch(Exception)
-            {
-                throw new DatabaseGlobalException();
-            }
-        }
-
-        public async Task DeleteNewsTopicAsync(int newsId, string role, string userId)
-        {
-            try
-            {
-                await _newsTopicRepository.DeleteNewsTopicAsync(newsId, role, userId);
+                await _newsTopicRepository.DeleteNewsTopicAsync(newsTopicId, role, userId);
             }
             catch(ForbiddenException)
             {

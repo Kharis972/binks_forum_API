@@ -19,6 +19,7 @@ namespace binks_forum_API.Data
         public DbSet<Rank> Ranks { get; set; }
         public DbSet<NewsTopics> NewsTopics { get; set; }
         public DbSet<Activity> Activities { get; set; }
+        public DbSet<AnswerInMessage> AnswersInMessages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -372,6 +373,24 @@ namespace binks_forum_API.Data
                           .HasColumnName("endingDate")
                           .HasField("_endingDate")
                           .IsRequired();
+            });
+
+            modelBuilder.Entity<AnswerInMessage>(answersInMessage =>
+            {
+                answersInMessage.HasKey(a => a.AnswerInMessageId)
+                                .HasName("answerInMessageId");
+                answersInMessage.Property(a => a.AnswerInMessageId)
+                                .HasColumnName("answerInMessageId")
+                                .HasField("_answerInMessageId")
+                                .IsRequired();
+                answersInMessage.Property(a => a.AnswerId)
+                                .HasColumnName("answerId")
+                                .HasField("_answerId")
+                                .IsRequired();
+                answersInMessage.Property(a => a.AnsweredMessageId)
+                                .HasColumnName("answeredMessageId")
+                                .HasField("_answeredMessageId")
+                                .IsRequired();
             });
         }
     }
