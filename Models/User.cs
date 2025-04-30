@@ -19,6 +19,7 @@ namespace binks_forum_API.Models
         private string? _profileImage;
         private int _age;
         private bool _isShadowBan;
+        private int _factionId;
 
         public List<Topic>? Topics { get; private set; }
         public Rank? Ranks { get; set; }
@@ -43,7 +44,8 @@ namespace binks_forum_API.Models
             bool passwordReset,
             string? profileImage,
             int age,
-            bool isShadowBan
+            bool isShadowBan,
+            int factionId
         )
         {
             _id = id;
@@ -61,6 +63,7 @@ namespace binks_forum_API.Models
             _profileImage = profileImage;
             _age = age;
             _isShadowBan = isShadowBan;
+            _factionId = factionId;
         }
         
 
@@ -139,6 +142,11 @@ namespace binks_forum_API.Models
         {
             get => _isShadowBan;
             set => _isShadowBan = value;
+        }
+        public int FactionId
+        {
+            get => _factionId;
+            set => _factionId = value;
         }
 
     }

@@ -104,12 +104,20 @@ namespace binks_forum_API.Data
                         v => v == 1
                     )
                     .IsRequired();
+                user.Property(u => u.FactionId)
+                    .HasColumnName("factionId")
+                    .HasField("_factionId")
+                    .IsRequired();
                 user.HasIndex(u => u.Id)
                     .IsUnique()
                     .HasDatabaseName("IX_users_id");
                 user.HasIndex(u => u.Mail)
                     .IsUnique()
                     .HasDatabaseName("IX_users_mail");
+                user.HasIndex(u => u.FactionId)
+                    .IsUnique()
+                    .HasDatabaseName("IX_users_faction");
+                
             });
 
             modelBuilder.Entity<Admin> (admin => 
@@ -372,6 +380,18 @@ namespace binks_forum_API.Data
                 activities.Property(a => a.EndingDate)
                           .HasColumnName("endingDate")
                           .HasField("_endingDate")
+                          .IsRequired();
+                activities.Property(a => a.Created_by)
+                          .HasColumnName("created_by")
+                          .HasField("_created_by")
+                          .IsRequired();
+                activities.Property(a => a.Activity_type)
+                          .HasColumnName("activity_type")
+                          .HasField("_activity_type")
+                          .IsRequired();
+                activities.Property(a => a.Is_featured)
+                          .HasColumnName("is_featured")
+                          .HasField("_is_featured")
                           .IsRequired();
             });
 

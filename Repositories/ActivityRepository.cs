@@ -28,7 +28,7 @@ namespace binks_forum_API.Repositories
                 }   
                     //Création de l'activité
                     Activity activity = new Activity
-                    (newActivity.Name, newActivity.Description, DateTime.Now, newActivity.ScheduledDate, newActivity.EndingDate, userId);
+                    (newActivity.Name, newActivity.Description, DateTime.Now, newActivity.ScheduledDate, newActivity.EndingDate, newActivity.Created_by, newActivity.Activity_type, newActivity.Is_featured, userId);
                     try
                     { 
                         await _dbSet.AddAsync(activity);
@@ -83,6 +83,18 @@ namespace binks_forum_API.Repositories
                     {
                         activity.EndingDate = editActivity.EndingDate;
                     }
+                    if(activity.Created_by != editActivity.Created_by)
+                    {
+                        activity.Created_by = editActivity.Created_by;
+                    }
+                    if(activity.Activity_type != editActivity.Activity_type)
+                    {
+                        activity.Activity_type = editActivity.Activity_type;
+                    }
+                    if(activity.Is_featured != editActivity.Is_featured)
+                    {
+                        activity.Is_featured = editActivity.Is_featured;
+                    }
                     if(activity.UserId != userId)
                     {
                         activity.UserId = userId;
@@ -92,6 +104,9 @@ namespace binks_forum_API.Repositories
                 activity.Description = editActivity.Description;
                 activity.ScheduledDate = editActivity.ScheduledDate;
                 activity.EndingDate = editActivity.EndingDate;
+                activity.Created_by = editActivity.Created_by;
+                activity.Activity_type = editActivity.Activity_type;
+                activity.Is_featured = editActivity.Is_featured;
 
                 await _context.SaveChangesAsync();
                 return activity;

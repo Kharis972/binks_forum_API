@@ -26,5 +26,16 @@ namespace binks_forum_API.DTOs.Activities
         [DataType(DataType.Date, ErrorMessage = "La date doit être valide.")]
         [RegularExpression(@"^\d{4}-\d{2}-\d{2}$", ErrorMessage = "La date doit être au format AAAA-MM-JJ.")]
         public DateTime EndingDate { get; set; }
+
+        [Required(ErrorMessage = "L'ID de l'utilisateur créateur est requis.")]
+        [RegularExpression(@"^[a-zA-Z0-9]+$", ErrorMessage = "L'ID de l'utilisateur créateur doit contenir uniquement des lettres et des chiffres.")]
+        public string Created_by { get; set; }
+
+        [Required(ErrorMessage = "Le type d'activité est requis.")]
+        [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "Le type d'activité doit contenir uniquement des lettres.")]
+        public string Activity_type { get; set; }
+
+        [Required(ErrorMessage = "Le statut de mise en avant est requis.")]
+        public bool Is_featured { get; set; }
     }
 }

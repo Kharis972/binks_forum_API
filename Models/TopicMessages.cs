@@ -9,7 +9,7 @@ namespace binks_forum_API.Models
         private string _userId = null!;
         private DateTime _date;
         private int _score;
-        private string _body = null!;
+        private string _content = null!;
 
         public Topic? Topic { get; set; }
 
@@ -24,14 +24,14 @@ namespace binks_forum_API.Models
             string userId,
             DateTime date,
             int score,
-            string body
+            string content
         )
         {
             _topicId = topicId;
             _userId = userId;
             _date = date;
             _score = score;
-            _body = body;
+            _content = content;
         }
 
         public int Id
@@ -63,10 +63,10 @@ namespace binks_forum_API.Models
             set => _score = value;
         }
 
-        public string Body
+        public string Content
         {
-            get => _body;
-            set =>  _body = value;
+            get => _content;
+            set =>  _content = value;
         }
     }
 }
