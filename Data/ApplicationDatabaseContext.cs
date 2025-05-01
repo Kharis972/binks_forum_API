@@ -238,9 +238,9 @@ namespace binks_forum_API.Data
                      .HasColumnName("score")
                      .HasField("_score")
                      .IsRequired();
-                topicMessages.Property(t => t.Body)
-                     .HasColumnName("body")
-                     .HasField("_id")
+                topicMessages.Property(t => t.Content)
+                     .HasColumnName("content")
+                     .HasField("_content")
                      .IsRequired();
                 topicMessages.HasOne(t => t.User)
                      .WithMany()
