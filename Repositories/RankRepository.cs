@@ -138,8 +138,8 @@ namespace binks_forum_API.Repositories
             try
             {
                
-                    Admin? admin = await _context.Admins.FindAsync(userId);
-                    if(admin == null) throw new ForbiddenException();
+                Admin? admin = await _context.Admins.FindAsync(userId);
+                if(admin == null) throw new ForbiddenException();
                 
 
                 Rank? rank = await _dbSet.FindAsync(rankId);

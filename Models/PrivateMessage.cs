@@ -15,7 +15,6 @@ namespace binks_forum_API.Models
         
         public PrivateMessage
         (
-            int privateMessageId, 
             string? userId, 
             string? messageContent, 
             DateTime sentDate, 
@@ -25,7 +24,6 @@ namespace binks_forum_API.Models
             string? subject
         )
         {
-            _privateMessageId = privateMessageId;
             _userId = userId;
             _messageContent = messageContent;
             _sentDate = sentDate;

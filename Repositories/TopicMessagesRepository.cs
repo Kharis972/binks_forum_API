@@ -32,7 +32,7 @@ namespace binks_forum_API.Repositories
                 {
                     try
                     {
-                        if(await _dbSet.FirstOrDefaultAsync(t => t.Body == newTopicMessages.Body.Trim()) == null)
+                        if(await _dbSet.FirstOrDefaultAsync(t => t.Content == newTopicMessages.Body.Trim()) == null)
                         {
                             TopicMessages topicMessages = new TopicMessages(topicId, userId, DateTime.Now, 0, newTopicMessages.Body.Trim());
 
@@ -92,9 +92,9 @@ namespace binks_forum_API.Repositories
                             TopicMessages? topicMessages = await _dbSet.FindAsync(topicMessagesId);
                             if (topicMessages != null)
                             {
-                                if(topicMessages.Body != editTopicMessages.Body)
+                                if(topicMessages.Content != editTopicMessages.Content)
                                 {
-                                    topicMessages.Body = editTopicMessages.Body;
+                                    topicMessages.Content = editTopicMessages.Content;
                                 } 
                                 else
                                 {

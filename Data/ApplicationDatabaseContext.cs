@@ -20,6 +20,7 @@ namespace binks_forum_API.Data
         public DbSet<NewsTopics> NewsTopics { get; set; }
         public DbSet<Activity> Activities { get; set; }
         public DbSet<AnswerInMessage> AnswersInMessages { get; set; }
+        public DbSet<PrivateMessage> PrivateMessages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -411,6 +412,44 @@ namespace binks_forum_API.Data
                                 .HasColumnName("answeredMessageId")
                                 .HasField("_answeredMessageId")
                                 .IsRequired();
+            });
+
+            modelBuilder.Entity<PrivateMessage>(privateMessage =>
+            {
+                privateMessage.HasKey(pm => pm.PrivateMessageId)
+                              .HasName("id");
+                privateMessage.Property(pm => pm.PrivateMessageId)
+                              .HasColumnName("id")
+                              .HasField("_id")
+                              .IsRequired();
+                privateMessage.Property(pm => pm.UserId)
+                              .HasColumnName("userId")
+                              .HasField("_userId")
+                              .IsRequired();
+                privateMessage.Property(pm => pm.SenderId)
+                              .HasColumnName("senderId")
+                              .HasField("_senderId")
+                              .IsRequired();
+                privateMessage.Property(pm => pm.ReceiverId)
+                              .HasColumnName("receiverId")
+                              .HasField("_receiverId")
+                              .IsRequired();
+                privateMessage.Property(pm => pm.Subject)
+                              .HasColumnName("subject")
+                              .HasField("_subject")
+                              .IsRequired();
+                privateMessage.Property(pm => pm.MessageContent)
+                              .HasColumnName("messageContent")
+                              .HasField("_messageContent")
+                              .IsRequired();
+                privateMessage.Property(pm => pm.SentDate)
+                              .HasColumnName("sentDate")
+                              .HasField("_sentDate")
+                              .IsRequired();
+                privateMessage.Property(pm => pm.IsRead)
+                              .HasColumnName("isRead")
+                              .HasField("_isRead")
+                              .IsRequired();
             });
         }
     }

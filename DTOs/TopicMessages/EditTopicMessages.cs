@@ -6,7 +6,7 @@ namespace binks_forum_API.DTOs.TopicMessages
     {
         [Required(ErrorMessage = "Le contenu du corps est requis.")]
         [RegularExpression("^[A-Za-z0-9\\s]+$", ErrorMessage = "Le corps doit contenir uniquement des lettres, des chiffres et des espaces.")]
-        public string Body { get; set; }
+        public string Content { get; set; }
 
     }
 }
