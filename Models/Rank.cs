@@ -3,11 +3,12 @@ namespace binks_forum_API.Models
     public class Rank 
     {
         private int _id;
-        private string _name;
-        private string _description;
+        private string _name = null!;
+        private string _description = null!;
         private int _minXp;
-        private string _rankIcon;
+        private string _rankIcon = null!;
 
+        public List<User>? Users { get; set; }
 
         public Rank() {}
 

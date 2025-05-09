@@ -1,4 +1,3 @@
-using binks_forum_API.DTOs.NewsTopics;
 using binks_forum_API.Helpers.CustomExceptions;
 using binks_forum_API.Models;
 using binks_forum_API.Repositories.Interfaces;

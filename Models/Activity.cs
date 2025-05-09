@@ -3,19 +3,16 @@ namespace binks_forum_API.Models
     public class Activity
     {
         private int _id;
-        private string _name;
-        private string _description;
+        private string _name = null!;
+        private string _description = null!;
         private DateTime _creationDate;
         private DateTime _scheduledDate;
         private DateTime _endingDate;
-        private string _created_by;
-        private string _activity_type;
+        private string _activity_type = null!;
         private bool _is_featured;
-        private string _userId =null!;
+        private string? _userId;
 
         public Activity() {}
-        public Admin? Admin { get; set; }
-        public Modo? Modo { get; set; }
         public User? User { get; set; }
         // public List<Participation>? Participations { get; set; } = new List<Participation>();
 
@@ -26,7 +23,6 @@ namespace binks_forum_API.Models
             DateTime creationDate,
             DateTime scheduledDate,
             DateTime endingDate,
-            string created_by,
             string activity_type,
             bool is_featured,
             string userId
@@ -37,7 +33,6 @@ namespace binks_forum_API.Models
             _creationDate = creationDate;
             _scheduledDate = scheduledDate;
             _endingDate = endingDate;
-            _created_by = created_by;
             _activity_type = activity_type;
             _is_featured = is_featured;
             _userId = userId;
@@ -73,11 +68,6 @@ namespace binks_forum_API.Models
             get => _endingDate;
             set => _endingDate = value;
         }
-        public string Created_by
-        {
-            get => _created_by;
-            set => _created_by = value;
-        }
         public string Activity_type
         {
             get => _activity_type;
@@ -88,6 +78,6 @@ namespace binks_forum_API.Models
             get => _is_featured;
             set => _is_featured = value;
         }
-        public string UserId { get; set; }
+        public string? UserId => _userId;
     }
 }

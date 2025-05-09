@@ -81,7 +81,8 @@ namespace binks_forum_API.Repositories
                     false,
                     null,
                     newUserRequest.Age,
-                    false
+                    false,
+                    newUserRequest.FactionId
                 );
 
                 //Cible une possible exception lors de la sauvegarde
@@ -98,6 +99,7 @@ namespace binks_forum_API.Repositories
 
             }
         }
+
         public async Task<User> LoginAsync(LoginRequest loginRequest)
         {
             
@@ -108,7 +110,7 @@ namespace binks_forum_API.Repositories
             {
                 user = await _dbSet.FirstOrDefaultAsync(u => u.Mail == loginRequest.Mail.Trim());
             }
-            //Si il y a y a une exception, il renverait DatabaseGlobalException
+            //Si il y a y a une exception, il renverra DatabaseGlobalException
             catch(Exception)
             {
                 throw new DatabaseGlobalException();
@@ -183,38 +185,42 @@ namespace binks_forum_API.Repositories
             {
                 throw new DatabaseGlobalException();
             }
-                if (user == null)
-                {
-                    throw new UserNotFoundException();
-                }
-                else
-                {
-                    // Mettre à jour les propriétés de l'utilisateur
-                    if(user.FirstName != editRequest.FirstName)
-                    {
-                        user.FirstName = editRequest.FirstName;
-                    }
-                    if(user.LastName != editRequest.LastName)
-                    {
-                        user.LastName = editRequest.LastName;
-                    }
-                    if(user.NickName != editRequest.NickName)
-                    {
-                        user.NickName = editRequest.NickName;
-                    }
-                    if(user.Country != editRequest.Country)
-                    {
-                        user.Country = editRequest.Country;
-                    }
 
+            if (user == null)
+            {
+                throw new UserNotFoundException();
+            }
+            else
+            {
+                // Mettre à jour les propriétés de l'utilisateur
+                if(user.FirstName != editRequest.FirstName)
+                {
+                    user.FirstName = editRequest.FirstName;
+                }
+                if(user.LastName != editRequest.LastName)
+                {
+                    user.LastName = editRequest.LastName;
+                }
+                if(user.NickName != editRequest.NickName)
+                {
+                    user.NickName = editRequest.NickName;
+                }
+                if(user.Country != editRequest.Country)
+                {
+                    user.Country = editRequest.Country;
+                }
+
+                try
+                {
                     _dbSet.Update(user); // Marquer l'objet comme modifié
                     await _context.SaveChangesAsync(); // Sauvegarder les modifications
                     return user; // Retourner l'utilisateur modifié
                 }
-
-                
-                
-                
+                catch
+                {
+                    throw new DatabaseUpdateException();
+                }
+            }
         }
     }
 }

@@ -21,6 +21,7 @@ namespace binks_forum_API.Data
         public DbSet<Activity> Activities { get; set; }
         public DbSet<AnswerInMessage> AnswersInMessages { get; set; }
         public DbSet<PrivateMessage> PrivateMessages { get; set; }
+        public DbSet<PrivateDiscussion> PrivateDiscussions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -106,9 +107,20 @@ namespace binks_forum_API.Data
                     )
                     .IsRequired();
                 user.Property(u => u.FactionId)
-                    .HasColumnName("factionId")
+                    .HasColumnName("faction_id")
                     .HasField("_factionId")
                     .IsRequired();
+                user.HasOne(u => u.Rank)
+                    .WithMany(r => r.Users)
+                    .HasForeignKey(u => u.RankId)
+                    .HasConstraintName("foreign_users_rank_id")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+                user.HasOne(u => u.Faction)
+                    .WithMany(f => f.Users)
+                    .HasForeignKey(u => u.FactionId)
+                    .HasConstraintName("foreign_users_faction_id")
+                    .OnDelete(DeleteBehavior.SetNull);
                 user.HasIndex(u => u.Id)
                     .IsUnique()
                     .HasDatabaseName("IX_users_id");
@@ -118,7 +130,30 @@ namespace binks_forum_API.Data
                 user.HasIndex(u => u.FactionId)
                     .IsUnique()
                     .HasDatabaseName("IX_users_faction");
-                
+            });
+
+            modelBuilder.Entity<Faction>(faction =>
+            {
+                faction.ToTable("factions");
+
+                faction.HasKey(f => f.FactionId)
+                    .HasName("id");
+                faction.Property(f => f.FactionId)
+                    .HasColumnName("id")
+                    .HasField("_factionId")
+                    .IsRequired();
+                faction.Property(f => f.Name)
+                    .HasColumnName("name")
+                    .HasField("_name")
+                    .IsRequired();
+                faction.Property(f => f.Description)
+                    .HasColumnName("description")
+                    .HasField("_description")
+                    .IsRequired();
+                faction.Property(f => f.ImageUrl)
+                    .HasColumnName("icon_url")
+                    .HasField("_imageUrl")
+                    .IsRequired();
             });
 
             modelBuilder.Entity<Admin> (admin => 
@@ -275,7 +310,7 @@ namespace binks_forum_API.Data
                     .IsRequired();
                 news.Property(n => n.Body)
                     .HasColumnName("body")
-                    .HasField("_id")
+                    .HasField("_body")
                     .IsRequired();
                 news.Property(n => n.ReleaseDate)
                     .HasColumnName("releaseDate")
@@ -285,8 +320,8 @@ namespace binks_forum_API.Data
 
             modelBuilder.Entity<NewsRank> (newsRank =>
             {
-                newsRank.HasKey(nr => nr.Id)
-                        .HasName("id");
+                newsRank.ToTable("newsRanks");
+
                 newsRank.Property(nr => nr.Id)
                         .HasColumnName("id")
                         .HasField("_id")
@@ -307,6 +342,8 @@ namespace binks_forum_API.Data
 
             modelBuilder.Entity<NewsTopics>(newsTopics =>
             {
+                newsTopics.ToTable("newsTopics");
+
                 newsTopics.Property(nt => nt.TopicId)
                           .HasColumnName("topicId")
                           .HasField("_topicId")
@@ -332,6 +369,8 @@ namespace binks_forum_API.Data
              
             modelBuilder.Entity<Rank>(rank =>
             {
+                rank.ToTable("ranks");
+
                 rank.HasKey(r => r.Id) // Définir la clé primaire
                     .HasName("id");
                 
@@ -360,6 +399,8 @@ namespace binks_forum_API.Data
 
             modelBuilder.Entity<Activity> (activities =>
             {
+                activities.ToTable("activities");
+
                 activities.HasKey(a => a.Id)
                           .HasName("id");
                 activities.Property(a => a.Name)
@@ -382,10 +423,6 @@ namespace binks_forum_API.Data
                           .HasColumnName("endingDate")
                           .HasField("_endingDate")
                           .IsRequired();
-                activities.Property(a => a.Created_by)
-                          .HasColumnName("created_by")
-                          .HasField("_created_by")
-                          .IsRequired();
                 activities.Property(a => a.Activity_type)
                           .HasColumnName("activity_type")
                           .HasField("_activity_type")
@@ -394,10 +431,21 @@ namespace binks_forum_API.Data
                           .HasColumnName("is_featured")
                           .HasField("_is_featured")
                           .IsRequired();
+                activities.Property(a => a.UserId)
+                        .HasColumnName("userId")
+                        .HasField("_userId")
+                        .IsRequired();
+                activities.HasOne(a => a.User)
+                          .WithMany()
+                          .HasForeignKey(a => a.UserId)
+                          .HasConstraintName("foreign_activities_users_id")
+                          .IsRequired();
             });
 
             modelBuilder.Entity<AnswerInMessage>(answersInMessage =>
             {
+                answersInMessage.ToTable("answersInMessage");
+
                 answersInMessage.HasKey(a => a.AnswerInMessageId)
                                 .HasName("answerInMessageId");
                 answersInMessage.Property(a => a.AnswerInMessageId)
@@ -416,11 +464,13 @@ namespace binks_forum_API.Data
 
             modelBuilder.Entity<PrivateMessage>(privateMessage =>
             {
+                privateMessage.ToTable("privateMessages");
+
                 privateMessage.HasKey(pm => pm.PrivateMessageId)
                               .HasName("id");
                 privateMessage.Property(pm => pm.PrivateMessageId)
                               .HasColumnName("id")
-                              .HasField("_id")
+                              .HasField("_privateMessageId")
                               .IsRequired();
                 privateMessage.Property(pm => pm.UserId)
                               .HasColumnName("userId")
@@ -450,6 +500,34 @@ namespace binks_forum_API.Data
                               .HasColumnName("isRead")
                               .HasField("_isRead")
                               .IsRequired();
+            });
+
+            modelBuilder.Entity<PrivateDiscussion> (privateDiscussion =>
+            {
+                privateDiscussion.ToTable("privateDiscussion");
+
+                privateDiscussion.HasKey(pd => pd.PrivateDiscussionId)
+                                 .HasName("privateDiscussionId");
+                privateDiscussion.Property(pd => pd.PrivateDiscussionId)
+                                 .HasColumnName("privateDiscussionId")
+                                 .HasField("_privateDiscussionId")
+                                 .IsRequired();
+                privateDiscussion.Property(pd => pd.UserId)
+                                 .HasColumnName("userId")
+                                 .HasField("_userId")
+                                 .IsRequired();
+                privateDiscussion.Property(pd => pd.Title)
+                                 .HasColumnName("title")
+                                 .HasField("_title")
+                                 .IsRequired();
+                privateDiscussion.Property(pd => pd.Creation)
+                                 .HasColumnName("creation")
+                                 .HasField("_creation")
+                                 .IsRequired();
+                privateDiscussion.Property(pd => pd.LastMessageAt)
+                                 .HasColumnName("lastMessageAt")
+                                 .HasField("_lastMessageAt")
+                                 .IsRequired();
             });
         }
     }

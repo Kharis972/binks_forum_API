@@ -20,8 +20,8 @@ namespace binks_forum_API.Models
 
         public int AnswerInMessageId
         {
-            get => _answeredMessageId;
-            set => _answeredMessageId = value;
+            get => _answerInMessageId;
+            set => _answerInMessageId = value;
         }
         public int AnswerId
         {

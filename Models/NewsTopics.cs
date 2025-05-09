@@ -3,9 +3,9 @@ namespace binks_forum_API.Models
     public class NewsTopics : News
     {
         // Relation avec News
-        public News News { get; set; }
+        public News News { get; set; } = null!;
         // Relation avec Topic
-        public Topic Topic { get; set; }
+        public Topic Topic { get; set; } = null!;
 
         private int _newsTopicId;
         private int _newsId;

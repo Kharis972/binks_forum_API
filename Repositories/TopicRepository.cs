@@ -36,7 +36,17 @@ namespace binks_forum_API.Repositories
                     {
                         if(await _dbSet.FirstOrDefaultAsync(t => t.Name == newTopic.Name) != null)
                         {
-                            Topic topic = new Topic(newTopic.Description, user.Id, newTopic.Name, newTopic.Subjects, 0, 1, newTopic.TopicIcon, DateTime.Now );
+                            Topic topic = new Topic
+                            (
+                                newTopic.Description, 
+                                user.Id, 
+                                newTopic.Name, 
+                                newTopic.Subjects, 
+                                0, 
+                                1, 
+                                newTopic.TopicIcon, 
+                                DateTime.Now 
+                            );
 
                             try
                             {

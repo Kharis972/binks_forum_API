@@ -25,10 +25,10 @@ namespace binks_forum_API.Repositories
                 else
                 {
                     throw new UserNotFoundException();
-                }   
+                }  
                     //Création de l'activité
                     Activity activity = new Activity
-                    (newActivity.Name, newActivity.Description, DateTime.Now, newActivity.ScheduledDate, newActivity.EndingDate, newActivity.Created_by, newActivity.Activity_type, newActivity.Is_featured, userId);
+                    (newActivity.Name, newActivity.Description, DateTime.Now, newActivity.ScheduledDate, newActivity.EndingDate, newActivity.Activity_type, newActivity.Is_featured, userId);
                     try
                     { 
                         await _dbSet.AddAsync(activity);
@@ -83,10 +83,6 @@ namespace binks_forum_API.Repositories
                     {
                         activity.EndingDate = editActivity.EndingDate;
                     }
-                    if(activity.Created_by != editActivity.Created_by)
-                    {
-                        activity.Created_by = editActivity.Created_by;
-                    }
                     if(activity.Activity_type != editActivity.Activity_type)
                     {
                         activity.Activity_type = editActivity.Activity_type;
@@ -95,16 +91,11 @@ namespace binks_forum_API.Repositories
                     {
                         activity.Is_featured = editActivity.Is_featured;
                     }
-                    if(activity.UserId != userId)
-                    {
-                        activity.UserId = userId;
-                    }
                 // 3. Mettre à jour l'activité
                 activity.Name = editActivity.Name;
                 activity.Description = editActivity.Description;
                 activity.ScheduledDate = editActivity.ScheduledDate;
                 activity.EndingDate = editActivity.EndingDate;
-                activity.Created_by = editActivity.Created_by;
                 activity.Activity_type = editActivity.Activity_type;
                 activity.Is_featured = editActivity.Is_featured;
 

@@ -156,3 +156,4 @@ C:\Users\khari\Documents\Binks_Forum_API\obj\Debug\net9.0\refint\Binks_Forum_API
 C:\Users\khari\Documents\Binks_Forum_API\obj\Debug\net9.0\Binks_Forum_API.pdb
 C:\Users\khari\Documents\Binks_Forum_API\obj\Debug\net9.0\Binks_Forum_API.genruntimeconfig.cache
 C:\Users\khari\Documents\Binks_Forum_API\obj\Debug\net9.0\ref\Binks_Forum_API.dll
+C:\Users\khari\Documents\Binks_Forum_API\obj\Debug\net9.0\Binks_Forum_API.sourcelink.json

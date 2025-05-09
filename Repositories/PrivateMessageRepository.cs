@@ -8,8 +8,6 @@ namespace binks_forum_API.Repositories
 {
     public class PrivateMessageRepository : Repository<PrivateMessage, int>, IPrivateMessageRepository
     {
-        private readonly ApplicationDataBaseContext _context;
-
         public PrivateMessageRepository(ApplicationDataBaseContext context) : base(context) {}
 
         public async Task<PrivateMessage> AddNewPrivateMessageAsync(NewPrivateMessage newPrivateMessage, string userId)

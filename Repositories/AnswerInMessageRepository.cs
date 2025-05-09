@@ -9,11 +9,8 @@ namespace binks_forum_API.Repositories
 
     public class AnswerInMessageRepository : Repository<AnswerInMessage, int>, IAnswerInMessageRepository
     {
-        private readonly ApplicationDataBaseContext _context;
-
         public AnswerInMessageRepository(ApplicationDataBaseContext context) : base(context)
         {
-            _context = context;
         }
         public async Task<AnswerInMessage> AddNewAnswerInMessageAsync(NewAnswerInMessage newAnswerInMessage, string userId)
         {

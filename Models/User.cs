@@ -4,15 +4,15 @@ namespace binks_forum_API.Models
     {
         //Variables
         //private used only inside constructors
-        private string _id;
-        private string _firstName;
-        private string  _lastName;
-        private string _nickName;
+        private string _id = null!;
+        private string _firstName = null!;
+        private string  _lastName = null!;
+        private string _nickName = null!;
         private int _xp;
         private int _rankId;
-        private string _encryptedPassword;
-        private string _country;
-        private string _mail;
+        private string _encryptedPassword = null!;
+        private string _country = null!;
+        private string _mail = null!;
         private DateTime _creationDate;
         private bool _doubleAuth;
         private bool _passwordReset;
@@ -22,7 +22,8 @@ namespace binks_forum_API.Models
         private int _factionId;
 
         public List<Topic>? Topics { get; private set; }
-        public Rank? Ranks { get; set; }
+        public Rank? Rank { get; set; }
+        public Faction? Faction { get; set; }
 
         //default contructor by FluentAPI
         public User() {}

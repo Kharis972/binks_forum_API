@@ -17,7 +17,7 @@ namespace binks_forum_API.DTOs.User
 
         [Required(ErrorMessage = "Le pseudo doit être compris entre 2 et 50 caractères")]
         [StringLength(50, MinimumLength = 2, ErrorMessage = "Le pseudo doit être compris entre 2 et 50 caractères")]
-        [RegularExpression(@"^[A-Za-z0-9\s!#$%&'()*+,-./:;<=>?@[\\]^_`{|}~]{2,50}$", ErrorMessage = "Le pseudo contient des caractères invalides.")]
+        [RegularExpression(@"^[A-Za-z0-9]{2,50}$", ErrorMessage = "Le pseudo contient des caractères invalides.")]
         public string NickName { get; set; }
 
         [Required(ErrorMessage = "Le mot de passe obligatoire.")]
@@ -36,19 +36,16 @@ namespace binks_forum_API.DTOs.User
         [RegularExpression(@"^[^@\s]+@[^@\s]+\.[^@\s]+$", ErrorMessage = "L'adresse email doit contenir un '@' et un '.'")]
         [EmailAddress(ErrorMessage = "L'adresse email doit contenir un '@' et un '.'")]
         public string Mail { get; set; }
-        
-        [Required(ErrorMessage = "La date de création est obligatoire.")]
-        [DataType(DataType.Date, ErrorMessage = "La date doit être valide.")]
-        [RegularExpression(@"^\d{4}-\d{2}-\d{2}$", ErrorMessage = "La date doit être au format AAAA-MM-JJ.")]
-        public DateTime CreationDate { get; set; }
 
         [Required(ErrorMessage = "l'age doit être compris entre 0 et 120")]
         [Range(0, 120, ErrorMessage = "L'âge doit être compris entre 0 et 120.")]
         [RegularExpression("^(0|[1-9][0-9]?|1[01][0-9]|120)$", ErrorMessage = "l'age contient uniquement des chiffres de 0 à 9 et des nombres de 10 à 120")]
         public int Age { get; set; }
 
-
-        
+        [Required(ErrorMessage = "Le numéro de faction doit être compris entre 1 et 4")]
+        [Range(1, 4, ErrorMessage = "Le numéro de faction doit être compris entre 1 et 4.")]
+        [RegularExpression("^(0|[1-9][0-9]?|1[01][0-9]|120)$", ErrorMessage = "Le numéro de faction contient uniquement d'un chiffre allant de 1 à 4")]
+        public int FactionId { get; set; }
         }
     }
 

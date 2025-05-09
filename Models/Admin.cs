@@ -27,8 +27,9 @@ namespace binks_forum_API.Models
             string profileImage,
             int age,
             bool isShadowBan,
+            int factionId,
             string adminId
-        ) : base(id, firstName, lastName, nickName, xp, rankId, encryptedPassword, country, mail, creationDate, doubleAuth, passwordReset, profileImage, age, isShadowBan)
+        ) : base(id, firstName, lastName, nickName, xp, rankId, encryptedPassword, country, mail, creationDate, doubleAuth, passwordReset, profileImage, age, isShadowBan, factionId)
         {
             _adminId = adminId;
         }

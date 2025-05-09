@@ -3,9 +3,9 @@ namespace binks_forum_API.Models
     public class News 
     {
         private int _id;
-        private string _name;
-        private string _description;
-        private string _body;
+        private string _name = null!;
+        private string _description = null!;
+        private string _body = null!;
         private DateTime _releaseDate;
 
         public News() {}
