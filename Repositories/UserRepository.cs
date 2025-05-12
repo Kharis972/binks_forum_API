@@ -1,5 +1,3 @@
-//#pragma warning disable
-
 using Microsoft.EntityFrameworkCore;
 using binks_forum_API.Data;
 using binks_forum_API.DTOs.User;
@@ -8,16 +6,13 @@ using binks_forum_API.Models;
 using binks_forum_API.Repositories.Interfaces;
 using binks_forum_API.Helpers.CustomExceptions;
 
-
 namespace binks_forum_API.Repositories
 {
     public class UserRepository : Repository<User, string>, IUserRepository
     {
-        //Constructeur du UserRepository
         public UserRepository(ApplicationDataBaseContext context) : base(context)
         {
-
-        } 
+        }
 
         public async Task<User> SignupAsync(NewUserRequest newUserRequest)
         {

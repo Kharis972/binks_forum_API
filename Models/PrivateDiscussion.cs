@@ -3,7 +3,6 @@ namespace binks_forum_API.Models
     public class PrivateDiscussion
     {
         private int _privateDiscussionId;
-
         private string? _userId;
         private string _title = null!;
         private DateTime _creation;
