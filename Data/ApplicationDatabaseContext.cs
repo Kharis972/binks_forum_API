@@ -22,6 +22,7 @@ namespace binks_forum_API.Data
         public DbSet<AnswerInMessage> AnswersInMessages { get; set; }
         public DbSet<PrivateMessage> PrivateMessages { get; set; }
         public DbSet<PrivateDiscussion> PrivateDiscussions { get; set; }
+        public DbSet<Faction> Factions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -528,6 +529,26 @@ namespace binks_forum_API.Data
                                  .HasColumnName("lastMessageAt")
                                  .HasField("_lastMessageAt")
                                  .IsRequired();
+            });
+
+            modelBuilder.Entity<Faction> (faction =>
+            {
+                faction.ToTable("faction");
+
+                faction.HasKey(f => f.FactionId)
+                       .HasName("factionId");
+                faction.Property(f => f.FactionId)
+                       .HasColumnName("factionId")
+                       .HasField("_factionId")
+                       .IsRequired();
+                faction.Property(f => f.Name)
+                        .HasColumnName("name")
+                        .HasField("_name")
+                        .IsRequired();
+                faction.Property(f => f.ImageUrl)
+                        .HasColumnName("imageUrl")
+                        .HasField("_imageUrl")
+                        .IsRequired();
             });
         }
     }

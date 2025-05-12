@@ -1,5 +1,8 @@
+using System.Net.Mime;
+using binks_forum_API.Models;
 using binks_forum_API.Service.Interfaces;
 using binks_forum_API.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace binks_forum_API.Controllers
@@ -15,6 +18,7 @@ namespace binks_forum_API.Controllers
         private readonly IActivityService _activityService;
         private readonly INewsRankService _newsRankService;
         private readonly IRankService _rankService;
+        private readonly IFactionService _factionService;
 
         //Constructeur pour initialiser le dépôt d'utilisateurs via injection de dépendance.
         public AdminController
@@ -25,7 +29,8 @@ namespace binks_forum_API.Controllers
             IModoService modoService, 
             IActivityService activityService, 
             INewsRankService newsRankService, 
-            IRankService rankService
+            IRankService rankService,
+            IFactionService factionService
         )
         {
             _userService = userService;
@@ -35,9 +40,15 @@ namespace binks_forum_API.Controllers
             _activityService = activityService;
             _newsRankService = newsRankService;
             _rankService = rankService;
+            _factionService = factionService;
         }
 
         [HttpGet("getAllUsers")]
+        [Authorize(Roles = "Admin")]
+        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(typeof(IEnumerable<User>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllUsersAsync()
         {
             try
@@ -50,7 +61,13 @@ namespace binks_forum_API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
         [HttpGet("getAllTopics")]
+        [Authorize(Roles = "Admin")]
+        [Produces(MediaTypeNames.Application.Json)] 
+        [ProducesResponseType(typeof(IEnumerable<Topic>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllTopicsAsync()
         {
             try
@@ -63,7 +80,13 @@ namespace binks_forum_API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
         [HttpGet("getAllTopicMessages")]
+        [Authorize(Roles = "Admin")]
+        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(typeof(IEnumerable<TopicMessages>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllTopicMessagesAsync()
         {
             try
@@ -76,7 +99,13 @@ namespace binks_forum_API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
         [HttpGet("getAllModos")]
+        [Authorize(Roles = "Admin")]
+        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(typeof(IEnumerable<Modo>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllModosAsync()
         {
             try
@@ -89,7 +118,13 @@ namespace binks_forum_API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
         [HttpGet("getAllActivities")]
+        [Authorize(Roles = "Admin")]
+        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(typeof(IEnumerable<Activity>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllActivitiesAsync()
         {
             try
@@ -102,7 +137,13 @@ namespace binks_forum_API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
         [HttpGet("getAllNewsRanks")]
+        [Authorize(Roles = "Admin")]
+        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(typeof(IEnumerable<NewsRank>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllNewsRanksAsync()
         {
             try
@@ -115,7 +156,13 @@ namespace binks_forum_API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
         [HttpGet("getAllRanks")]
+        [Authorize(Roles = "Admin")]
+        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(typeof(IEnumerable<Rank>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllRanksAsync()
         {
             try
@@ -128,6 +175,25 @@ namespace binks_forum_API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet("getAllFactions")]
+        [Authorize(Roles = "Admin")]
+        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(typeof(IEnumerable<Faction>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetAllFactionsAsync()
+        {
+            try
+            {
+                var factions = await _factionService.GetAllAsync();
+                return Ok(factions);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         
+        }
     }
 }
