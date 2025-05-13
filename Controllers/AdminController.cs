@@ -12,6 +12,7 @@ namespace binks_forum_API.Controllers
     public class AdminController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IBadgeService _badgeService;
         private readonly ITopicService _topicService;
         private readonly ITopicMessagesService _topicMessagesService;
         private readonly IModoService _modoService;
@@ -19,21 +20,25 @@ namespace binks_forum_API.Controllers
         private readonly INewsRankService _newsRankService;
         private readonly IRankService _rankService;
         private readonly IFactionService _factionService;
+        private readonly IAnswerInMessageService _answerInMessageService;
 
         //Constructeur pour initialiser le dépôt d'utilisateurs via injection de dépendance.
         public AdminController
         (
             IUserService userService,
+            IBadgeService badgeService,
             ITopicService topicService, 
             ITopicMessagesService topicMessagesService, 
             IModoService modoService, 
             IActivityService activityService, 
             INewsRankService newsRankService, 
             IRankService rankService,
-            IFactionService factionService
+            IFactionService factionService,
+            IAnswerInMessageService answerInMessageService
         )
         {
             _userService = userService;
+            _badgeService = badgeService;
             _topicService = topicService;
             _topicMessagesService = topicMessagesService;
             _modoService = modoService;
@@ -41,6 +46,7 @@ namespace binks_forum_API.Controllers
             _newsRankService = newsRankService;
             _rankService = rankService;
             _factionService = factionService;
+            _answerInMessageService = answerInMessageService;
         }
 
         [HttpGet("getAllUsers")]
@@ -167,7 +173,7 @@ namespace binks_forum_API.Controllers
         {
             try
             {
-                var ranks = await _rankService.GetAllAsync();
+                List<Rank> ranks = (await _rankService.GetAllAsync() ?? Enumerable.Empty<Rank>()).ToList();
                 return Ok(ranks);
             }
             catch (Exception ex)
@@ -186,7 +192,7 @@ namespace binks_forum_API.Controllers
         {
             try
             {
-                var factions = await _factionService.GetAllAsync();
+                List<Faction> factions = (await _factionService.GetAllAsync() ?? Enumerable.Empty<Faction>()).ToList();
                 return Ok(factions);
             }
             catch (Exception ex)
@@ -194,6 +200,26 @@ namespace binks_forum_API.Controllers
                 return BadRequest(ex.Message);
             }
         
+        }
+
+        [HttpGet("getAllAnswerInMessages")]
+        [Authorize(Roles = "Admin")]
+        [Produces (MediaTypeNames.Application.Json)]
+        [ProducesResponseType(typeof(IEnumerable<AnswerInMessage>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetAllANswerInMessagesAsync()
+        {
+            try
+            {
+                List<AnswerInMessage> answerInMessage = (await _answerInMessageService.GetAllAsync() ?? Enumerable.Empty<AnswerInMessage>()).ToList();
+                return Ok(answerInMessage);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
         }
     }
 }
