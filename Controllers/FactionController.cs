@@ -51,9 +51,9 @@ namespace binks_forum_API.Controllers
                 Faction? faction = await _factionService.AddNewFactionAsync(newFaction, adminId);
                 return CreatedAtAction(nameof(GetById), new { id = faction.FactionId }, faction);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
 
@@ -70,9 +70,9 @@ namespace binks_forum_API.Controllers
                 Faction? faction = await _factionService.EditFactionAsync(editFaction, factionId, adminId);
                 return Ok(faction);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
 
@@ -89,9 +89,9 @@ namespace binks_forum_API.Controllers
                 await _factionService.DeleteFactionAsync(factionId, adminId);
                 return NoContent();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
     }

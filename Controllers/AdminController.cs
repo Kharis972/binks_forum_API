@@ -59,12 +59,12 @@ namespace binks_forum_API.Controllers
         {
             try
             {
-                var users = await _userService.GetAllAsync();
+                IEnumerable<User> users = await _userService.GetAllAsync() ?? Enumerable.Empty<User>();
                 return Ok(users);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("An error occurred while retrieving users.");
             }
         }
 
@@ -78,12 +78,12 @@ namespace binks_forum_API.Controllers
         {
             try
             {
-                var topics = await _topicService.GetAllAsync();
+                IEnumerable<Topic> topics = await _topicService.GetAllAsync() ?? Enumerable.Empty<Topic>();
                 return Ok(topics);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("An error occurred while retrieving topics.");
             }
         }
 
@@ -97,12 +97,12 @@ namespace binks_forum_API.Controllers
         {
             try
             {
-                var topicMessages = await _topicMessagesService.GetAllAsync();
+                IEnumerable<TopicMessages> topicMessages = await _topicMessagesService.GetAllAsync() ?? Enumerable.Empty<TopicMessages>();
                 return Ok(topicMessages);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("An error occurred while retrieving topic messages.");
             }
         }
 
@@ -116,12 +116,12 @@ namespace binks_forum_API.Controllers
         {
             try
             {
-                var modos = await _modoService.GetAllAsync();
+                IEnumerable<Modo> modos = await _modoService.GetAllAsync() ?? Enumerable.Empty<Modo>();
                 return Ok(modos);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("An error occurred while retrieving modos.");
             }
         }
 
@@ -135,12 +135,12 @@ namespace binks_forum_API.Controllers
         {
             try
             {
-                var activities = await _activityService.GetAllAsync();
+                List<Activity> activities = (await _activityService.GetAllAsync() ?? Enumerable.Empty<Activity>()).ToList();
                 return Ok(activities);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("An error occurred while retrieving activities.");
             }
         }
 
@@ -154,12 +154,12 @@ namespace binks_forum_API.Controllers
         {
             try
             {
-                var newsRanks = await _newsRankService.GetAllAsync();
+                List<NewsRank> newsRanks = (await _newsRankService.GetAllAsync() ?? Enumerable.Empty<NewsRank>()).ToList();
                 return Ok(newsRanks);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("An error occurred while retrieving news ranks.");
             }
         }
 
@@ -176,9 +176,9 @@ namespace binks_forum_API.Controllers
                 List<Rank> ranks = (await _rankService.GetAllAsync() ?? Enumerable.Empty<Rank>()).ToList();
                 return Ok(ranks);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("An error occurred while retrieving ranks.");
             }
         }
 
@@ -195,9 +195,9 @@ namespace binks_forum_API.Controllers
                 List<Faction> factions = (await _factionService.GetAllAsync() ?? Enumerable.Empty<Faction>()).ToList();
                 return Ok(factions);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("An error occurred while retrieving factions.");
             }
         
         }
@@ -215,9 +215,9 @@ namespace binks_forum_API.Controllers
                 List<AnswerInMessage> answerInMessage = (await _answerInMessageService.GetAllAsync() ?? Enumerable.Empty<AnswerInMessage>()).ToList();
                 return Ok(answerInMessage);
             }
-            catch(Exception ex)
+            catch(Exception)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("An error occurred while retrieving answer in messages.");
             }
 
         }
