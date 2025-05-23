@@ -29,6 +29,9 @@ builder.Services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>))
                 .AddScoped(typeof(IService<,>), typeof(Service<,>))
                 .AddScoped<IUserService, UserService>();
 
+
+builder.Configuration.AddUserSecrets<Program>();
+
 // Configuration de l'URL de la base de données venant de appsettings.json
 builder.Services.AddDbContext<ApplicationDataBaseContext>(options =>
     {
