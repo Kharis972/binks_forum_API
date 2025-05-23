@@ -63,7 +63,7 @@ namespace binks_forum_API.Controllers
             try
             {
                 AnswerInMessage? answerInMessage = await _answerInMessageService.AddNewAnswerInMessageAsync(newAnswerInMessage, userId);
-                return CreatedAtAction(nameof(GetAnswerInMessageByIdAsync), new { id = answerInMessage.AnswerInMessageId }, answerInMessage);
+                return Ok(newAnswerInMessage);
             }
             catch (Exception ex)
             {

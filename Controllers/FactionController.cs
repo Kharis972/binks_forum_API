@@ -18,7 +18,7 @@ namespace binks_forum_API.Controllers
             _factionService = factionService;
         }
 
-        public object GetById { get; private set; }
+        public object? GetById { get; private set; }
 
         /// <summary>
         /// Adds a new faction to the database.
@@ -49,7 +49,7 @@ namespace binks_forum_API.Controllers
             try
             {
                 Faction? faction = await _factionService.AddNewFactionAsync(newFaction, adminId);
-                return CreatedAtAction(nameof(GetById), new { id = faction.FactionId }, faction);
+                return Ok(newFaction);
             }
             catch (Exception)
             {
