@@ -1,6 +1,7 @@
 using binks_forum_API.Models;
 using binks_forum_API.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace binks_forum_API.Controllers
 {
@@ -16,6 +17,7 @@ namespace binks_forum_API.Controllers
         }
 
         [HttpGet("getAllPrivateDiscussions")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAllPrivateDiscussionsAsync()
         {
             try

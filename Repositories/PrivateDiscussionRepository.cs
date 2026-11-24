@@ -2,10 +2,11 @@ using binks_forum_API.Data;
 using binks_forum_API.Helpers.CustomExceptions;
 using binks_forum_API.Models;
 using binks_forum_API.Services.Interfaces;
+using binks_forum_API.Repositories.Interfaces;
 
 namespace binks_forum_API.Repositories
 {
-    public class PrivateDiscussionRepository : Repository<PrivateDiscussion, int>
+    public class PrivateDiscussionRepository : Repository<PrivateDiscussion, int>, IPrivateDiscussionRepository
     {
         public PrivateDiscussionRepository(ApplicationDataBaseContext context) : base(context) {}
 

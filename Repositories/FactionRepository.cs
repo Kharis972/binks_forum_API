@@ -2,10 +2,11 @@ using binks_forum_API.Data;
 using binks_forum_API.DTOs.Faction;
 using binks_forum_API.Helpers.CustomExceptions;
 using binks_forum_API.Models;
+using binks_forum_API.Repositories.Interfaces;
 
 namespace binks_forum_API.Repositories
 {
-    public class FactionRepository : Repository<Faction, int>
+    public class FactionRepository : Repository<Faction, int>, IFactionRepository
     {
         public FactionRepository(ApplicationDataBaseContext context) : base(context) {}
         public async Task<Faction> AddNewFactionAsync(NewFaction newFaction, string adminId)

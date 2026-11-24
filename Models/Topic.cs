@@ -4,7 +4,7 @@ namespace binks_forum_API.Models
     {
         //Variables
         //private used only inside constructors
-        private int _topicId;
+        private int _topicId = 0;
         private string _description = null!;
         private string _userId = null!;
         private string _name = null!;

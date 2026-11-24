@@ -16,125 +16,46 @@ namespace binks_forum_API.Repositories
 
         public async Task<TopicMessages> AddNewTopicMessagesAsync(int topicId, string userId, AddNewTopicMessages newTopicMessages)
         {
-            User? user;
+            var user = await _context.Users.FindAsync(userId)
+                ?? throw new UserNotFoundException();
+            if (user.IsShadowBan) throw new UnauthorizedException();
+            if (!await _context.Topics.AnyAsync(topic => topic.TopicId == topicId))
+                throw new TopicNotFoundException();
+
+            var message = new TopicMessages(topicId, userId, DateTime.UtcNow, 0, newTopicMessages.Body.Trim());
+            await _dbSet.AddAsync(message);
             try
             {
-                user = await _context.Users.FindAsync(userId);
+                await _context.SaveChangesAsync();
+                return message;
             }
-            catch
+            catch (Microsoft.EntityFrameworkCore.DbUpdateException)
             {
-                throw new DatabaseGlobalException();
-            }
-
-            if(user != null)
-            {
-                if(user.IsShadowBan == false)
-                {
-                    try
-                    {
-                        if(await _dbSet.FirstOrDefaultAsync(t => t.Content == newTopicMessages.Body.Trim()) == null)
-                        {
-                            TopicMessages topicMessages = new TopicMessages(topicId, userId, DateTime.Now, 0, newTopicMessages.Body.Trim());
-
-                            try
-                            {
-                                await _dbSet.AddAsync(topicMessages);
-                                await _context.SaveChangesAsync();
-                                return topicMessages;
-                            }
-                            catch(DatabaseUpdateException)
-                            {
-                                throw new DatabaseUpdateException();
-                            }
-                        }
-                        else
-                        {
-                            throw new TopicMessagesAlreadyExistsException();
-                        }
-                    }
-                    catch(Exception)
-                    {
-                        throw new DatabaseGlobalException();
-                    }
-                }
-                else
-                {
-                    throw new UnauthorizedException();
-                }
-            }
-            else
-            {
-                throw new UserNotFoundException();
+                throw new DatabaseUpdateException();
             }
         }
 
         public async Task<TopicMessages> EditTopicMessagesAsync(string userId, int topicId, EditTopicMessages editTopicMessages, int topicMessagesId)
         {
-            User? user;
+            var user = await _context.Users.FindAsync(userId)
+                ?? throw new UserNotFoundException();
+            if (user.IsShadowBan) throw new UnauthorizedException();
+            var message = await _dbSet.FindAsync(topicMessagesId)
+                ?? throw new TopicMessagesNotFoundException();
+            if (message.TopicId != topicId) throw new TopicNotFoundException();
+            if (message.UserId != userId && !await _context.Admins.AnyAsync(a => a.Id == userId))
+                throw new UnauthorizedException();
+            var content = editTopicMessages.Content.Trim();
+            if (message.Content == content) throw new NoChangesException();
+            message.Content = content;
             try
             {
-                user = await _context.Users.FindAsync(userId);
+                await _context.SaveChangesAsync();
+                return message;
             }
-            catch
+            catch (Microsoft.EntityFrameworkCore.DbUpdateException)
             {
-                throw new DatabaseGlobalException();
-            }
-
-            if(user != null)
-            {
-                if(user.IsShadowBan == false)
-                {
-                    
-                    if(await _context.Topics.AnyAsync(t => t.TopicId == topicId))
-                    {
-                        try
-                        {
-                            TopicMessages? topicMessages = await _dbSet.FindAsync(topicMessagesId);
-                            if (topicMessages != null)
-                            {
-                                if(topicMessages.Content != editTopicMessages.Content)
-                                {
-                                    topicMessages.Content = editTopicMessages.Content;
-                                } 
-                                else
-                                {
-                                    throw new NoChangesException();
-                                }
-
-                                try
-                                {
-                                    _dbSet.Update(topicMessages);
-                                    await _context.SaveChangesAsync();
-                                    return topicMessages;
-                                }
-                                catch
-                                {
-                                    throw new DatabaseUpdateException();
-                                }
-                            }
-                            else
-                            {
-                                throw new TopicNotFoundException();
-                            }
-                        }
-                        catch
-                        {
-                            throw new DatabaseGlobalException();
-                        }
-                    }
-                    else
-                    {
-                        throw new TopicNotFoundException();
-                    }
-                }
-                else
-                {
-                    throw new UnauthorizedException();
-                }
-            }
-            else
-            {
-                throw new UserNotFoundException();
+                throw new DatabaseUpdateException();
             }
         }
 

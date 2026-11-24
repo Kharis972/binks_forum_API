@@ -1,4 +1,4 @@
-using binks_forum_API.Service.Interfaces;
+using binks_forum_API.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace binks_forum_API.Controllers

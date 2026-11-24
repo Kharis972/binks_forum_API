@@ -16,12 +16,14 @@ namespace binks_forum_API.Repositories
 
         public async Task<User> SignupAsync(NewUserRequest newUserRequest)
         {
+            var normalizedMail = newUserRequest.Mail.Trim().ToLowerInvariant();
             bool userExists;
 
             //Tente d'aller chercher l'entity dans la db
             try
             {
-                userExists = await _dbSet.AnyAsync(u => u.Mail == newUserRequest.Mail.Trim());
+                var normalizedNickname = newUserRequest.NickName.Trim().ToLowerInvariant();
+                userExists = await _dbSet.AnyAsync(u => u.Mail.ToLower() == normalizedMail || u.NickName.ToLower() == normalizedNickname);
             }
             //Si il y a y a une exception, il renverait DatabaseGlobalException
             catch(Exception)
@@ -65,14 +67,14 @@ namespace binks_forum_API.Repositories
                     generatedId,
                     newUserRequest.FirstName,
                     newUserRequest.LastName,
-                    newUserRequest.NickName,
+                    newUserRequest.NickName.Trim(),
                     0,
                     1,  
                     Encryption.HashPassword(newUserRequest.Password), // Assuming this is the encryptedPassword        
                     newUserRequest.Country,
-                    newUserRequest.Mail,
-                    DateTime.Now,
-                    true,
+                    normalizedMail,
+                    DateTime.UtcNow,
+                    false,
                     false,
                     null,
                     newUserRequest.Age,
@@ -97,13 +99,13 @@ namespace binks_forum_API.Repositories
 
         public async Task<User> LoginAsync(LoginRequest loginRequest)
         {
-            
+            var normalizedMail = loginRequest.Mail.Trim().ToLowerInvariant();
             User? user;
 
             // Tente d'aller chercher l'entity dans la db
             try
             {
-                user = await _dbSet.FirstOrDefaultAsync(u => u.Mail == loginRequest.Mail.Trim());
+                user = await _dbSet.FirstOrDefaultAsync(u => u.Mail.ToLower() == normalizedMail);
             }
             //Si il y a y a une exception, il renverra DatabaseGlobalException
             catch(Exception)

@@ -18,7 +18,12 @@ namespace binks_forum_API.Controllers
             _factionService = factionService;
         }
 
-        public object? GetById { get; private set; }
+        [HttpGet]
+        public async Task<IActionResult> GetAllAsync()
+        {
+            var factions = await _factionService.GetAllAsync();
+            return factions is null ? Problem("Factions indisponibles.", statusCode: StatusCodes.Status503ServiceUnavailable) : Ok(factions);
+        }
 
         /// <summary>
         /// Adds a new faction to the database.
@@ -49,7 +54,7 @@ namespace binks_forum_API.Controllers
             try
             {
                 Faction? faction = await _factionService.AddNewFactionAsync(newFaction, adminId);
-                return Ok(newFaction);
+                return faction is null ? Problem("Impossible de creer la faction.") : StatusCode(StatusCodes.Status201Created, faction);
             }
             catch (Exception)
             {
@@ -57,13 +62,13 @@ namespace binks_forum_API.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpPut("{factionId:int}")]
         [Authorize(Roles = "Admin")]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(Faction), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> EditFaction([FromBody] EditFaction editFaction, [FromQuery] int factionId, [FromQuery] string adminId)
+        public async Task<IActionResult> EditFaction([FromBody] EditFaction editFaction, [FromRoute] int factionId, [FromQuery] string adminId)
         {
             try
             {
@@ -76,13 +81,13 @@ namespace binks_forum_API.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpDelete("{factionId:int}")]
         [Authorize(Roles = "Admin")]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(Faction), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> DeleteFaction([FromQuery] int factionId, [FromQuery] string adminId)
+        public async Task<IActionResult> DeleteFaction([FromRoute] int factionId, [FromQuery] string adminId)
         {
             try
             {

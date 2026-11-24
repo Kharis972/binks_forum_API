@@ -412,9 +412,6 @@ namespace binks_forum_API.Data
                 topic.HasIndex(t => t.Name)
                      .IsUnique()
                      .HasDatabaseName("IX_topics_name");
-                topic.HasIndex(t => t.TopicIcon)
-                     .IsUnique()
-                     .HasDatabaseName("IX_topics_topicIcon");
             });
 
             modelBuilder.Entity<TopicMessages> (topicMessages =>
@@ -553,7 +550,7 @@ namespace binks_forum_API.Data
                     .WithMany(f => f.Users)
                     .HasForeignKey(u => u.FactionId)
                     .HasConstraintName("foreign_users_faction_id")
-                    .OnDelete(DeleteBehavior.SetNull);
+                    .OnDelete(DeleteBehavior.Restrict);
                 user.HasIndex(u => u.Id)
                     .IsUnique()
                     .HasDatabaseName("IX_users_id");
@@ -561,7 +558,6 @@ namespace binks_forum_API.Data
                     .IsUnique()
                     .HasDatabaseName("IX_users_mail");
                 user.HasIndex(u => u.FactionId)
-                    .IsUnique()
                     .HasDatabaseName("IX_users_faction");
             });
         }

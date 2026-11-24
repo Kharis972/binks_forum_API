@@ -40,10 +40,11 @@ namespace binks_forum_API.Service
             {
                 throw new UnauthorizedException();
             }
-            catch
+            catch(UserNotFoundException)
             {
                 throw new UserNotFoundException();
             }
+            catch { throw new ServerInternalException(); }
         }
 
         public async Task<Topic> EditTopicAsync(string userId, int topicId, EditTopic editTopic)

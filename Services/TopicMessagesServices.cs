@@ -28,10 +28,19 @@ namespace binks_forum_API.Service
             {
                 throw new DatabaseGlobalException();
             }
-            catch
+            catch (TopicNotFoundException)
+            {
+                throw new TopicNotFoundException();
+            }
+            catch (UnauthorizedException)
+            {
+                throw new UnauthorizedException();
+            }
+            catch (UserNotFoundException)
             {
                 throw new UserNotFoundException();
             }
+            catch { throw new ServerInternalException(); }
         }
         public async Task<TopicMessages> EditTopicMessagesAsync(string userId, int topicId, EditTopicMessages editTopicMessages, int topicMessagesId)
         {

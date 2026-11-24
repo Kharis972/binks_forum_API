@@ -7,12 +7,12 @@ namespace binks_forum_API.DTOs.User
     {
         [Required(ErrorMessage = "Le prénom est obligatoire.")]
         [StringLength(50, MinimumLength = 2, ErrorMessage = "Le prénom doit être compris entre 2 et 50 caractères")]
-        [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "Le prénom doit contenir uniquement des lettres.")]
+        [RegularExpression(@"^[\p{L}\p{M}][\p{L}\p{M}'’ -]*$", ErrorMessage = "Le prénom doit contenir uniquement des lettres.")]
         public string FirstName { get; set; }
 
         [Required(ErrorMessage = "Le nom est obligatoire.")]
         [StringLength(50, MinimumLength = 2, ErrorMessage = "Le nom doit être compris entre 2 et 50 caractères")]
-        [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "Le nom doit contenir uniquement des lettres.")]
+        [RegularExpression(@"^[\p{L}\p{M}][\p{L}\p{M}'’ -]*$", ErrorMessage = "Le nom doit contenir uniquement des lettres.")]
         public string LastName { get; set; }
 
         [Required(ErrorMessage = "Le pseudo doit être compris entre 2 et 50 caractères")]
@@ -22,13 +22,13 @@ namespace binks_forum_API.DTOs.User
 
         [Required(ErrorMessage = "Le mot de passe obligatoire.")]
         [StringLength(100, MinimumLength = 12, ErrorMessage = "Le mot de passe doit être compris entre 12 et 100 caractères")]
-        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?:{}|<>])[A-Za-z\d!@#$%^&*(),.?:{}|<>]{8,}$", 
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?:{}|<>])[A-Za-z\d!@#$%^&*(),.?:{}|<>]{12,100}$", 
         ErrorMessage = "Le mot de passe doit contenir au moins 12 caractères, dont une majuscule, une minuscule, un chiffre et un caractère spécial.")]
         public string Password { get; set; }
 
         [Required(ErrorMessage = "Le pays est obligatoire")]
         [StringLength(58, MinimumLength = 4, ErrorMessage = "le pays doit être compris entre 4 et 58 caractères")]
-        [RegularExpression("^[A-Za-zÀ-ÖØ-öø-ÿ\\s\\-]{4,58}$", ErrorMessage = "le pays doit être compris entre 4 et 58 caractères")]
+        [RegularExpression(@"^[\p{L}\p{M}\s-]{2,58}$", ErrorMessage = "Le nom du pays est invalide.")]
         public string Country { get; set; }
 
         [Required(ErrorMessage = "L'adresse e-mail est obligatoire.")]
@@ -44,7 +44,7 @@ namespace binks_forum_API.DTOs.User
 
         [Required(ErrorMessage = "Le numéro de faction doit être compris entre 1 et 4")]
         [Range(1, 4, ErrorMessage = "Le numéro de faction doit être compris entre 1 et 4.")]
-        [RegularExpression("^(0|[1-9][0-9]?|1[01][0-9]|120)$", ErrorMessage = "Le numéro de faction contient uniquement d'un chiffre allant de 1 à 4")]
+        [RegularExpression("^[1-4]$", ErrorMessage = "Le numéro de faction doit être compris entre 1 et 4.")]
         public int FactionId { get; set; }
         }
     }

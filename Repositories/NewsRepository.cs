@@ -3,10 +3,11 @@ using binks_forum_API.DTOs.News;
 using binks_forum_API.Helpers.CustomExceptions;
 using binks_forum_API.Models;
 using Microsoft.EntityFrameworkCore;
+using binks_forum_API.Repositories.Interfaces;
 
 namespace binks_forum_API.Repositories
 {
-    public class NewsRepository : Repository<News, int>
+    public class NewsRepository : Repository<News, int>, INewsRepository
     {
         public NewsRepository(ApplicationDataBaseContext context) : base(context) {}
 

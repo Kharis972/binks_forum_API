@@ -1,7 +1,3 @@
-// Déclare l'espace de noms pour organiser les interfaces des dépôts.
-using binks_forum_API.DTOs.User;
-using binks_forum_API.Models;
-
 namespace binks_forum_API.Repositories.Interfaces
 {
     // Définition de l'interface générique IRepository qui peut être utilisée avec n'importe quelle classe (T) et type de clé (TKey).

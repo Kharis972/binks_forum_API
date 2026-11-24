@@ -3,10 +3,11 @@ using binks_forum_API.DTOs.Activities;
 using binks_forum_API.Helpers.CustomExceptions;
 using binks_forum_API.Models;
 using Microsoft.EntityFrameworkCore;
+using binks_forum_API.Repositories.Interfaces;
 
 namespace binks_forum_API.Repositories
 {
-    public class ActivityRepository : Repository<Activity, int>
+    public class ActivityRepository : Repository<Activity, int>, IActivityRepository
     {
         public ActivityRepository(ApplicationDataBaseContext context) : base(context) {}
 

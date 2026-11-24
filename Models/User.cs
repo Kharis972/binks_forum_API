@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace binks_forum_API.Models
 {
     public class User
@@ -99,6 +101,7 @@ namespace binks_forum_API.Models
             get => _rankId;
             set => _rankId = value;
         }
+        [JsonIgnore]
         public string EncryptedPassword
         {
             get => _encryptedPassword;

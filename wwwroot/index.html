@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090c13">
+  <meta name="description" content="La Cantina e forum francophone Star Wars. Theories, actualites et discussions de la galaxie.">
+  <title>La Cantina e Forum Star Wars</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#home" aria-label="La Cantina, accueil">
+        <span class="brand-mark">&#x2726;</span><span>LA <b>CANTINA</b><small>LE FORUM GALACTIQUE</small></span>
+      </a>
+      <div class="side-label">ESPACE</div>
+      <nav class="main-nav" aria-label="Navigation principale">
+        <a class="nav-item active" href="#home" data-view="home"><span>&#x25c8;</span> Fil galactique</a>
+        <a class="nav-item" href="#topics" data-view="topics"><span>&#x25a6;</span> Discussions <i id="topicCount">06</i></a>
+        <a class="nav-item" href="#members" data-view="members"><span>&#x2659;</span> Membres</a>
+        <a class="nav-item" href="#news" data-view="news"><span>&#x25c9;</span> Holonet</a>
+      </nav>
+      <div class="side-label category-label">SECTEURS</div>
+      <nav class="sector-nav" aria-label="Secteurs du forum">
+        <a href="#" data-tag="Cinema"><span class="sector-dot gold"></span>Cinema & series</a>
+        <a href="#" data-tag="Lore"><span class="sector-dot blue"></span>Lore & theories</a>
+        <a href="#" data-tag="Jeux"><span class="sector-dot purple"></span>Jeux video</a>
+        <a href="#" data-tag="Communaute"><span class="sector-dot green"></span>Communaute</a>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="force-card"><div class="force-spark">&#x2727;</div><strong>La Force est avec toi</strong><p>Chaque grande saga commence par une discussion.</p><button class="text-button" id="sideCompose">Lancer une discussion <span>&#x2197;</span></button></div>
+        <div class="profile-mini"><div class="avatar avatar-blue" id="miniAvatar">V</div><div class="profile-copy"><strong id="miniName">Visiteur</strong><small id="miniRank">Voyageur</small></div><button class="dots" id="profileMenu" aria-label="Profil">eee</button></div>
+      </div>
+    </aside>
+
+    <main class="main-area">
+      <header class="topbar">
+        <button class="mobile-menu" id="mobileMenu" aria-label="Ouvrir le menu">&#9776;</button>
+        <div class="crumb"><span>GALAXIE</span><b>/</b><strong id="crumbName">FIL GALACTIQUE</strong></div>
+        <div class="top-actions"><label class="search"><span>&#x2315;</span><input id="searchInput" type="search" placeholder="Explorer la galaxie..." aria-label="Rechercher"><kbd>Ctrl K</kbd></label><button class="icon-button" id="notificationButton" aria-label="Notifications">&#x2667;<i></i></button><button class="login-button" id="loginButton">Connexion <span>&#x2197;</span></button></div>
+      </header>
+
+      <div class="preview-notice" id="previewNotice"><span>&#x25c9;</span><div><b>APERCU INTERACTIF</b><small>Les discussions de demonstration sont enregistrees sur cet appareil. Ta base sera raccordee ensuite.</small></div><button id="dismissNotice" aria-label="Fermer">&times;</button></div>
+
+      <section class="hero" id="hero">
+        <div class="hero-stars"></div><div class="hero-copy"><div class="eyebrow"><span></span> TRANSMISSION PRIORITAIRE <span class="eyebrow-line"></span> 03:41:22</div><h1>Une galaxie.<br><em>Mille histoires.</em></h1><p>Rejoins la conversation. Partage tes theories, explore les mysteres et rencontre celles et ceux qui vivent la saga autant que toi.</p><div class="hero-buttons"><button class="primary-button" id="heroCompose">Rejoindre la conversation <span>&#x2197;</span></button><a class="quiet-link" href="#topics" data-view="topics">Explorer les discussions <span>&rarr;</span></a></div></div>
+        <div class="hero-art" aria-hidden="true"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="planet"><div class="planet-ring"></div><span>&#x2726;</span></div><div class="planet-small"></div><div class="art-caption"><span>SECTEUR INCONNU</span><b>RIM OUTER / 04:12</b></div></div>
+        <div class="hero-foot"><span><i class="live-dot"></i> LA COMMUNAUTe EST EN LIGNE</span><span>TRANSMISSION 001 e CANTINA MOS EISLEY</span></div>
+      </section>
+
+      <section class="stats-row" aria-label="Statistiques du forum"><div><strong id="statTopics">1 284</strong><span>DISCUSSIONS</span></div><div><strong id="statMembers">8 492</strong><span>VOYAGEURS</span></div><div><strong id="statOnline">236</strong><span>EN LIGNE</span></div><div class="quote-stat"><span>&ldquo;</span><p>Que la Force soit avec vous.<small>- Tous les jours, ici.</small></p></div></section>
+
+      <section class="content-section" id="discussionSection">
+        <div class="section-heading"><div><div class="eyebrow muted">LE POUls DE LA GALAXIE</div><h2 id="sectionTitle">Discussions <em>e la une</em></h2></div><button class="outline-button" id="newTopicButton">+ Nouvelle discussion</button></div>
+        <div class="feed-toolbar"><div class="tabs" role="tablist"><button class="feed-tab selected" data-sort="featured">A la une <span>&#x2726;</span></button><button class="feed-tab" data-sort="recent">Recentes</button><button class="feed-tab" data-sort="active">Populaires</button></div><div class="feed-tools"><span id="resultCount">06 transmissions</span><button id="filterButton" class="filter-button">&#9776; <span>Filtrer</span></button></div></div>
+        <div class="filter-panel" id="filterPanel"><button class="filter-chip selected" data-filter="all">Tout voir</button><button class="filter-chip" data-filter="Cinema">Cinema & series</button><button class="filter-chip" data-filter="Lore">Lore & theories</button><button class="filter-chip" data-filter="Jeux">Jeux video</button><button class="filter-chip" data-filter="Communaute">Communaute</button></div>
+        <div class="discussion-list" id="discussionList" aria-live="polite"></div>
+        <button class="load-more" id="loadMore">Explorer toutes les discussions <span>&#x2193;</span></button>
+      </section>
+
+      <section class="lower-grid"><div class="holonet-card" id="holonet"><div class="card-top"><span class="eyebrow muted">BULLETIN DE LA REPUBLIQUE</span><span class="live-tag">&bull; EN DIRECT</span></div><h3>Les transmissions<br>du <em>Holonet</em></h3><p>Les dernieres nouvelles de la galaxie, selectionnees par la communaute.</p><button class="text-button" id="holonetButton">Lire les dernieres transmissions <span>&#x2197;</span></button></div><div class="member-card"><div class="eyebrow muted">EQUIPAGE DE LA SEMAINE</div><h3>Les voix de la <em>Force</em></h3><div class="member-stack"><div class="avatar avatar-gold">A</div><div class="avatar avatar-purple">M</div><div class="avatar avatar-red">K</div><div class="avatar avatar-green">L</div><span>+ 8 488 autres</span></div><p>Des passionnes venus des quatre coins de la galaxie.</p><button class="text-button" data-view="members">Rencontrer l'equipage <span>&#x2197;</span></button></div></section>
+      <footer class="footer"><span>&copy; 2026 LA CANTINA - UN FORUM DE FANS</span><span>FAIT AVEC <b>&#x2726;</b> DANS UNE GALAXIE LOINTAINE</span><a href="/swagger">API &rarr;</a></footer>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="modalBackdrop" hidden><section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><button class="modal-close" id="modalClose" aria-label="Fermer">e</button><div id="modalContent"></div></section></div>
+  <div class="toast-region" id="toastRegion" aria-live="polite"></div>
+</body>
+</html>

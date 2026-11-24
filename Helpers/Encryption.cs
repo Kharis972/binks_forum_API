@@ -1,91 +1,59 @@
 using System.Security.Cryptography;
 using System.Text;
 
-namespace binks_forum_API.Helpers
+namespace binks_forum_API.Helpers;
+
+public static class Encryption
 {
-    public static class Encryption
+    private const int SaltSize = 32;
+    private const int HashSize = 64;
+    private const int Pbkdf2Iterations = 210_000;
+
+    public static string HashPassword(string password)
     {
-        // Taille du sel en octets (par exemple 32)
-        private const int SaltSize = 32;
+        ArgumentNullException.ThrowIfNull(password);
+        var salt = RandomNumberGenerator.GetBytes(SaltSize);
+        var hash = Rfc2898DeriveBytes.Pbkdf2(Encoding.UTF8.GetBytes(password), salt,
+            Pbkdf2Iterations, HashAlgorithmName.SHA512, HashSize);
+        return $"pbkdf2-sha512${Pbkdf2Iterations}${Convert.ToBase64String(salt)}${Convert.ToBase64String(hash)}";
+    }
 
-        public static string HashPassword(string password)
+    public static bool VerifyPassword(string inputPassword, string storedPassword)
+    {
+        if (string.IsNullOrEmpty(inputPassword) || string.IsNullOrEmpty(storedPassword)) return false;
+        if (storedPassword.StartsWith("pbkdf2-sha512$", StringComparison.Ordinal))
         {
-            // Générer un sel aléatoire
-            byte[] salt = new byte[SaltSize];
-            using (RandomNumberGenerator rng = RandomNumberGenerator.Create())
+            try
             {
-                rng.GetBytes(salt);
+                var parts = storedPassword.Split('$');
+                if (parts.Length != 4 || !int.TryParse(parts[1], out var iterations) || iterations < 100_000 || iterations > 2_000_000)
+                    return false;
+                var salt = Convert.FromBase64String(parts[2]);
+                var expected = Convert.FromBase64String(parts[3]);
+                if (salt.Length != SaltSize || expected.Length != HashSize) return false;
+                var actual = Rfc2898DeriveBytes.Pbkdf2(Encoding.UTF8.GetBytes(inputPassword), salt,
+                    iterations, HashAlgorithmName.SHA512, expected.Length);
+                return CryptographicOperations.FixedTimeEquals(actual, expected);
             }
-
-            // Convertir le mot de passe en bytes et concaténer (sel + mot de passe)
-            byte[] passwordBytes = Encoding.UTF8.GetBytes(password);
-            byte[] saltedPassword = new byte[salt.Length + passwordBytes.Length];
-            Buffer.BlockCopy(salt, 0, saltedPassword, 0, salt.Length);
-            Buffer.BlockCopy(passwordBytes, 0, saltedPassword, salt.Length, passwordBytes.Length);
-
-            // Calculer le hash avec SHA512
-            using (SHA512 sha512Hash = SHA512.Create())
-            {
-                byte[] hashBytes = sha512Hash.ComputeHash(saltedPassword);
-
-                // Convertir le sel et le hash en chaînes hexadécimales
-                StringBuilder saltBuilder = new StringBuilder();
-                foreach (byte b in salt)
-                {
-                    saltBuilder.Append(b.ToString("x2"));
-                }
-
-                StringBuilder hashBuilder = new StringBuilder();
-                foreach (byte b in hashBytes)
-                {
-                    hashBuilder.Append(b.ToString("x2"));
-                }
-
-                // Retourner le sel et le hash séparés par un deux-points
-                return $"{saltBuilder}:{hashBuilder}";
-            }
+            catch (FormatException) { return false; }
+            catch (ArgumentException) { return false; }
         }
 
-        // Méthode de vérification du mot de passe
-        public static bool VerifyPassword(string inputPassword, string storedPassword)
+        // Preserve login compatibility with SHA-512 salted hashes created by earlier versions.
+        try
         {
-            // Le format attendu est "sel:hash"
-            var parts = storedPassword.Split(':');
-            if (parts.Length != 2)
-            {
+            var legacyParts = storedPassword.Split(':');
+            if (legacyParts.Length != 2 || legacyParts[0].Length != SaltSize * 2 || legacyParts[1].Length != HashSize * 2)
                 return false;
-            }
-
-            string saltHex = parts[0];
-            string storedHash = parts[1];
-
-            // Convertir le sel de hexadécimal en tableau d'octets
-            byte[] salt = new byte[saltHex.Length / 2];
-            for (int i = 0; i < salt.Length; i++)
-            {
-                salt[i] = Convert.ToByte(saltHex.Substring(i * 2, 2), 16);
-            }
-
-            // Concaténer le sel et le mot de passe d'entrée
-            byte[] passwordBytes = Encoding.UTF8.GetBytes(inputPassword);
-            byte[] saltedPassword = new byte[salt.Length + passwordBytes.Length];
+            var salt = Convert.FromHexString(legacyParts[0]);
+            var expected = Convert.FromHexString(legacyParts[1]);
+            var passwordBytes = Encoding.UTF8.GetBytes(inputPassword);
+            var saltedPassword = new byte[salt.Length + passwordBytes.Length];
             Buffer.BlockCopy(salt, 0, saltedPassword, 0, salt.Length);
             Buffer.BlockCopy(passwordBytes, 0, saltedPassword, salt.Length, passwordBytes.Length);
-
-            // Calculer le hash du mot de passe fourni
-            using (SHA512 sha512Hash = SHA512.Create())
-            {
-                byte[] computedHashBytes = sha512Hash.ComputeHash(saltedPassword);
-                StringBuilder computedHashBuilder = new StringBuilder();
-                foreach (byte b in computedHashBytes)
-                {
-                    computedHashBuilder.Append(b.ToString("x2"));
-                }
-                string computedHash = computedHashBuilder.ToString();
-
-                // Comparer les hash en ignorant la casse
-                return computedHash.Equals(storedHash, StringComparison.OrdinalIgnoreCase);
-            }
+            var actual = SHA512.HashData(saltedPassword);
+            return CryptographicOperations.FixedTimeEquals(actual, expected);
         }
+        catch (FormatException) { return false; }
     }
 }

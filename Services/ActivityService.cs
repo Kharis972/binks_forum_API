@@ -1,14 +1,15 @@
+using binks_forum_API.DTOs.Activities;
+using binks_forum_API.Helpers.CustomExceptions;
+using binks_forum_API.Models;
+using binks_forum_API.Repositories.Interfaces;
+using binks_forum_API.Service;
+using binks_forum_API.Service.Interfaces;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+
 namespace binks_forum_API.Services
 {
-    using binks_forum_API.DTOs.Activities;
-    using binks_forum_API.Helpers.CustomExceptions;
-    using binks_forum_API.Models;
-    using binks_forum_API.Repositories.Interfaces;
-    using binks_forum_API.Service;
-    using binks_forum_API.Service.Interfaces;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-
     public class ActivityService : Service<Activity, int>, IActivityService
     {
         private readonly IActivityRepository _activityRepository;
@@ -43,10 +44,10 @@ namespace binks_forum_API.Services
 
         } 
     
-        public async Task<Activity> EditActivityAsync(int id, string userId, NewActivity newActivity, string role)
+        public async Task<Activity> EditActivityAsync(int id, string userId, EditActivity editActivity, string role)
         {
             try{
-                return await _activityRepository.EditActivityAsync(id, userId, newActivity, role);
+                return await _activityRepository.EditActivityAsync(id, userId, editActivity, role);
             }
             catch (DatabaseGlobalException)
             {
@@ -66,7 +67,7 @@ namespace binks_forum_API.Services
             }
         }
 
-        public async Task<bool> DeleteActivityAsync(int id, string userId, string role)
+        public async Task<Activity> DeleteActivityAsync(int id, string userId, string role)
         {
             try
             {

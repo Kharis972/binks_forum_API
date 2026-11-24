@@ -34,35 +34,29 @@ namespace binks_forum_API.Repositories
                 {
                     try
                     {
-                        if(await _dbSet.FirstOrDefaultAsync(t => t.Name == newTopic.Name) != null)
-                        {
-                            Topic topic = new Topic
-                            (
-                                newTopic.Description, 
-                                user.Id, 
-                                newTopic.Name, 
-                                newTopic.Subjects, 
-                                0, 
-                                1, 
-                                newTopic.TopicIcon, 
-                                DateTime.Now 
-                            );
-
-                            try
-                            {
-                                await _dbSet.AddAsync(topic);
-                                await _context.SaveChangesAsync();
-                                return topic;
-                            }
-                            catch
-                            {
-                                throw new DatabaseUpdateException();
-                            }    
-                        }
-                        else
+                        var name = newTopic.Name.Trim();
+                        if(await _dbSet.AnyAsync(t => t.Name == name))
                         {
                             throw new TopicAlreadyExistsException();
                         }
+
+                        Topic topic = new Topic(newTopic.Description.Trim(), user.Id, name,
+                            newTopic.Subjects.Trim(), 0, 1, newTopic.TopicIcon.Trim(), DateTime.UtcNow);
+                        await _dbSet.AddAsync(topic);
+                        await _context.SaveChangesAsync();
+                        return topic;
+                    }
+                    catch (TopicAlreadyExistsException)
+                    {
+                        throw;
+                    }
+                    catch (DatabaseUpdateException)
+                    {
+                        throw;
+                    }
+                    catch (Microsoft.EntityFrameworkCore.DbUpdateException)
+                    {
+                        throw new DatabaseUpdateException();
                     }
                     catch
                     {
@@ -82,71 +76,26 @@ namespace binks_forum_API.Repositories
 
         public async Task<Topic> EditTopicAsync(string userId, int topicId, EditTopic editTopic)
         {
-            User? user;
+            var user = await _context.Users.FindAsync(userId)
+                ?? throw new UserNotFoundException();
+            if (user.IsShadowBan) throw new UnauthorizedException();
+            var topic = await _dbSet.FindAsync(topicId)
+                ?? throw new TopicNotFoundException();
+            var isAdmin = await _context.Admins.AnyAsync(a => a.Id == userId);
+            if (topic.UserId != userId && !isAdmin) throw new UnauthorizedException();
+
+            topic.Name = editTopic.Name.Trim();
+            topic.Description = editTopic.Description.Trim();
+            topic.Subjects = editTopic.Subjects.Trim();
+            topic.TopicIcon = editTopic.TopicIcon.Trim();
             try
             {
-                user = await _context.Users.FindAsync(userId);      
+                await _context.SaveChangesAsync();
+                return topic;
             }
-            catch
+            catch (Microsoft.EntityFrameworkCore.DbUpdateException)
             {
-                throw new DatabaseGlobalException();
-            }
-
-            if (user != null)
-            {
-                if (user.IsShadowBan == false)
-                {
-                    try
-                    {
-                        var topic = await _dbSet.FindAsync(topicId);
-                        if (topic != null)
-                        {
-                            if(topic.Name != editTopic.Name)
-                            {
-                                topic.Name = editTopic.Name;
-                            } 
-                            if(topic.Description != editTopic.Description)
-                            {
-                                topic.Description = editTopic.Description;
-                            }
-                            if(topic.Subjects != editTopic.Subjects)
-                            {
-                                topic.Subjects = editTopic.Subjects;
-                            }
-                            if(topic.TopicIcon != editTopic.TopicIcon)
-                            {
-                                topic.TopicIcon = editTopic.TopicIcon;
-                            }
-
-                            try
-                            {
-                                _dbSet.Update(topic);
-                                await _context.SaveChangesAsync();
-                                return topic;
-                            }
-                            catch
-                            {
-                                throw new DatabaseUpdateException();
-                            }
-                        }
-                        else
-                        {
-                            throw new TopicNotFoundException();
-                        }
-                    }
-                    catch
-                    {
-                        throw new DatabaseGlobalException();
-                    }
-                }
-                else
-                {
-                    throw new UnauthorizedException();
-                }
-            }
-            else
-            {
-                throw new UserNotFoundException();
+                throw new DatabaseUpdateException();
             }
         }
 

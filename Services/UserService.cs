@@ -3,6 +3,7 @@ using binks_forum_API.Helpers.CustomExceptions;
 using binks_forum_API.Models;
 using binks_forum_API.Repositories.Interfaces;
 using binks_forum_API.Service.Interfaces;
+using binks_forum_API.Services.Interfaces;
 
 namespace binks_forum_API.Service
 {
@@ -64,12 +65,12 @@ namespace binks_forum_API.Service
             }
         }
 
-        public async Task DeleteAsync(string Id)
+        public async Task DeleteAsync(string id)
         {
             try
             {
                 // Appel au dépôt pour supprimer l'utilisateur
-                await _userRepository.DeleteAsync(Id);
+                await _userRepository.DeleteAsync(id);
             }
             catch (UserNotFoundException)
             {

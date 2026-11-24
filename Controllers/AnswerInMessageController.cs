@@ -2,6 +2,7 @@ using binks_forum_API.DTOs.AnswerInMessage;
 using binks_forum_API.Models;
 using binks_forum_API.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace binks_forum_API.Controllers
 {
@@ -55,6 +56,7 @@ namespace binks_forum_API.Controllers
         }
 
         [HttpPost("addNewAnswerInMessage")]
+        [Authorize]
         [ProducesResponseType(typeof(AnswerInMessage), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -63,7 +65,9 @@ namespace binks_forum_API.Controllers
             try
             {
                 AnswerInMessage? answerInMessage = await _answerInMessageService.AddNewAnswerInMessageAsync(newAnswerInMessage, userId);
-                return Ok(newAnswerInMessage);
+                return answerInMessage is null
+                    ? Problem("Impossible de créer la réponse.", statusCode: StatusCodes.Status500InternalServerError)
+                    : CreatedAtAction(nameof(GetAnswerInMessageByIdAsync), new { id = answerInMessage.AnswerInMessageId }, answerInMessage);
             }
             catch (Exception ex)
             {
@@ -72,6 +76,7 @@ namespace binks_forum_API.Controllers
         }
 
         [HttpPut("editAnswerInMessage/{id}")]
+        [Authorize]
         [ProducesResponseType(typeof(AnswerInMessage), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -89,6 +94,7 @@ namespace binks_forum_API.Controllers
         }
 
         [HttpDelete("deleteAnswerInMessage/{id}")]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]

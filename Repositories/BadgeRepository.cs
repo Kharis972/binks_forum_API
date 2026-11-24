@@ -3,18 +3,19 @@ using binks_forum_API.DTOs.Badge;
 using binks_forum_API.Helpers.CustomExceptions;
 using binks_forum_API.Models;
 using Microsoft.EntityFrameworkCore;
+using binks_forum_API.Repositories.Interfaces;
 
 namespace binks_forum_API.Repositories
 {
-    public class BadgeRepository : Repository<Badge, int>
+    public class BadgeRepository : Repository<Badge, int>, IBadgeRepository
     {
         public BadgeRepository(ApplicationDataBaseContext context) : base(context) {}
 
         public async Task<Badge> AddNewBadgeAsync(NewBadge newBadge, string userId)
         {
-            Admin? admin = await _context.Admins.FindAsync(userId);
             try
             {
+                Admin? admin = await _context.Admins.FindAsync(userId);
                 if(admin != null)
                 {
                     if(await _dbSet.FirstOrDefaultAsync(b => b.MinXp == newBadge.MinXp || b.ImageUrl == newBadge.ImageUrl) != null)
@@ -40,7 +41,7 @@ namespace binks_forum_API.Repositories
                             await _context.SaveChangesAsync();
                             return badge;
                         }
-                        catch(DatabaseUpdateException)
+                        catch(Microsoft.EntityFrameworkCore.DbUpdateException)
                         {
                             throw new DatabaseUpdateException();
                         }
@@ -51,6 +52,8 @@ namespace binks_forum_API.Repositories
                     throw new ForbiddenException();
                 }
             }
+            catch (BadgeAlreadyExistsException) { throw; }
+            catch (ForbiddenException) { throw; }
             catch(Exception)
             {
                 throw new DatabaseGlobalException();
@@ -62,87 +65,37 @@ namespace binks_forum_API.Repositories
             Badge? badge;
             try
             {
-                try
-                {
-                    Admin? admin = await _context.Admins.FindAsync(userId);
-                    if(admin != null)
-                    {
-                        badge = await _dbSet.FindAsync(badgeId);
-                        if(badge == null)
-                        {
-                            throw new BadgeNotFoundException();
-                        }
-                    }
-                    else
-                    {
-                        throw new ForbiddenException();
-                    }
-                }
-                catch(DatabaseGlobalException)
-                {
-                    throw new DatabaseGlobalException();
-                }
-                if
-                (
-                    editBadge.Name != editBadge.Name && 
-                    editBadge.Description != editBadge.Description &&
-                    editBadge.MinXp != editBadge.MinXp &&
-                    editBadge.ImageUrl != editBadge.ImageUrl &&
-                    editBadge.PointsRequired != editBadge.PointsRequired
-                )
-                {
-                    if (editBadge.Name != editBadge.Name)
-                    {
-                        if (!string.IsNullOrEmpty(editBadge.Name))
-                        {
-                            editBadge.Name = editBadge.Name.Trim();
-                        }
-                    }
-                    if (editBadge.Description != editBadge.Description)
-                    {
-                        if (!string.IsNullOrEmpty(editBadge.Description))
-                        {
-                            editBadge.Description = editBadge.Description.Trim();
-                        }
-                    }
-                    if (editBadge.MinXp != editBadge.MinXp)
-                    {
-                        editBadge.MinXp = editBadge.MinXp;
-                    }
-                    if (editBadge.ImageUrl != editBadge.ImageUrl)
-                    {
-                        if (!string.IsNullOrEmpty(editBadge.ImageUrl))
-                        {
-                            editBadge.ImageUrl = editBadge.ImageUrl.Trim();
-                        }
-                    }
-                    if (editBadge.PointsRequired != editBadge.PointsRequired)
-                    {
-                        editBadge.PointsRequired = editBadge.PointsRequired;
-                    }
-                    if (await _dbSet.FirstOrDefaultAsync(b => b.ImageUrl == editBadge.ImageUrl || b.MinXp == editBadge.MinXp) != null)
-                    {
-                        throw new BadgeAlreadyExistsException();
-                    }
-                    try
-                    {
-                        _dbSet.Update(badge);
-                        await _context.SaveChangesAsync();
-                        return badge;
-                    }
-                    catch(Exception)
-                    {
-                        throw new DatabaseUpdateException();
-                    }
-                }
-                else
-                {
+                if (await _context.Admins.FindAsync(userId) == null) throw new ForbiddenException();
+                badge = await _dbSet.FindAsync(badgeId);
+                if (badge == null) throw new BadgeNotFoundException();
+
+                var name = string.IsNullOrWhiteSpace(editBadge.Name) ? badge.Name : editBadge.Name.Trim();
+                var description = string.IsNullOrWhiteSpace(editBadge.Description) ? badge.Description : editBadge.Description.Trim();
+                var imageUrl = string.IsNullOrWhiteSpace(editBadge.ImageUrl) ? badge.ImageUrl : editBadge.ImageUrl.Trim();
+                if (badge.Name == name && badge.Description == description && badge.MinXp == editBadge.MinXp &&
+                    badge.ImageUrl == imageUrl && badge.PointsRequired == editBadge.PointsRequired)
                     throw new NoChangesException();
-                }
+
+                if (await _dbSet.AnyAsync(b => b.BadgeId != badgeId && (b.ImageUrl == imageUrl || b.MinXp == editBadge.MinXp)))
+                    throw new BadgeAlreadyExistsException();
+
+                badge.Name = name;
+                badge.Description = description;
+                badge.MinXp = editBadge.MinXp;
+                badge.ImageUrl = imageUrl;
+                badge.PointsRequired = editBadge.PointsRequired;
+                badge.UpdatedAt = DateTime.UtcNow;
+                await _context.SaveChangesAsync();
+                return badge;
             }
+            catch (BadgeNotFoundException) { throw; }
+            catch (BadgeAlreadyExistsException) { throw; }
+            catch (ForbiddenException) { throw; }
+            catch (NoChangesException) { throw; }
+            catch (DatabaseUpdateException) { throw; }
             catch(Exception)
             {
-                throw new DatabaseGlobalException();
+                throw new DatabaseUpdateException();
             }
         }
 
